@@ -11,13 +11,13 @@ import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.support.annotation.ColorInt;
 import android.util.AttributeSet;
 import android.view.SoundEffectConstants;
 import android.view.View;
 
-import github.hellocsl.cursorwheellayout.R;
+import androidx.annotation.ColorInt;
 
+import github.hellocsl.cursorwheellayout.R;
 
 /**
  * <p/>
@@ -392,7 +392,7 @@ public class SwitchButton extends View {
          * @param buttonView The compound button view whose state has changed.
          * @param isChecked  The new checked state of buttonView.
          */
-        void onCheckedChanged(SwitchButton buttonView, boolean isChecked);
+        public void onCheckedChanged(SwitchButton buttonView, boolean isChecked);
     }
 
     /**
