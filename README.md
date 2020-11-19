@@ -17,7 +17,24 @@ You can also receive a callback for when an item is clicked, and whether it is s
 
 ### Gradle
 
-`compile 'github.hellocsl:CursorWheelLayout:1.1.0'`
+o get a Git project into your build:
+
+Step 1. Add the JitPack repository to your build file
+
+Add it in your root build.gradle at the end of repositories:
+
+	allprojects {
+		repositories {
+			...
+			maven { url 'https://jitpack.io' }
+		}
+	}
+
+Step 2. Add the dependency
+
+	dependencies {
+	        implementation 'com.github.shadygoneinsane:CursorWheelLayout:v2.0.0'
+	}
 
 ### Maven
 
