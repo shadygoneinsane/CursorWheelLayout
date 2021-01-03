@@ -218,10 +218,10 @@ open class CursorWheelLayout : ViewGroup {
                 ta.getInt(R.styleable.CursorWheelLayout_wheelItemRotateMode, ITEM_ROTATE_MODE_NONE)
             ta.recycle()
         }
-        init(context)
+        init()
     }
 
-    private fun init(context: Context) {
+    private fun init() {
         setWillNotDraw(false)
         mCursorPaint = Paint(Paint.ANTI_ALIAS_FLAG)
         mCursorPaint?.style = Paint.Style.FILL_AND_STROKE
@@ -644,9 +644,7 @@ open class CursorWheelLayout : ViewGroup {
      */
     private val defaultWidth: Int
         get() {
-            val wm = context.getSystemService(
-                Context.WINDOW_SERVICE
-            ) as WindowManager
+            val wm = context.getSystemService(Context.WINDOW_SERVICE) as WindowManager
             val outMetrics = DisplayMetrics()
             wm.defaultDisplay.getMetrics(outMetrics)
             return outMetrics.widthPixels.coerceAtMost(outMetrics.heightPixels)
@@ -786,9 +784,6 @@ open class CursorWheelLayout : ViewGroup {
             mInitStarAngle = mStartAngle
             mEndAngle = mSweepAngle + mInitStarAngle
             mBiggerBefore = mInitStarAngle >= mEndAngle
-            //            if (BuildConfig.DEBUG) {
-//                Log.d(TAG, "startUsingAngle() called with: " + "angle = [" + angle + "]" + ",mStartAngle:" + mInitStarAngle + ",mEndAngle:" + mEndAngle);
-//            }
             post(this)
         }
 
