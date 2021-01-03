@@ -149,7 +149,6 @@ open class CursorWheelLayout : ViewGroup {
     private var mMenuRadioDimension = 0f
     private var mCenterRadioDimension = 0f
     private var mPaddingRadio = 0f
-    private var mIsDebug = false
     private val mWheelBgPath = Path()
     private val mBgMatrix = Matrix()
     private val mBgRegion = Region()
@@ -166,10 +165,8 @@ open class CursorWheelLayout : ViewGroup {
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     constructor(
-        context: Context,
-        attrs: AttributeSet?,
-        defStyleAttr: Int,
-        defStyleRes: Int
+        context: Context, attrs: AttributeSet?,
+        defStyleAttr: Int, defStyleRes: Int
     ) : super(context, attrs, defStyleAttr, defStyleRes) {
         initWheel(context, attrs)
     }
@@ -221,24 +218,24 @@ open class CursorWheelLayout : ViewGroup {
                 ta.getInt(R.styleable.CursorWheelLayout_wheelItemRotateMode, ITEM_ROTATE_MODE_NONE)
             ta.recycle()
         }
-        init(context)
+        init()
     }
 
-    private fun init(context: Context) {
+    private fun init() {
         setWillNotDraw(false)
         mCursorPaint = Paint(Paint.ANTI_ALIAS_FLAG)
-        mCursorPaint!!.style = Paint.Style.FILL_AND_STROKE
-        mCursorPaint!!.color = mCursorColor
-        mCursorPaint!!.isDither = true
+        mCursorPaint?.style = Paint.Style.FILL_AND_STROKE
+        mCursorPaint?.color = mCursorColor
+        mCursorPaint?.isDither = true
         mWheelPaint = Paint(Paint.ANTI_ALIAS_FLAG)
-        mWheelPaint!!.style = Paint.Style.FILL
-        mWheelPaint!!.color = mWheelBgColor
-        mWheelPaint!!.isDither = true
+        mWheelPaint?.style = Paint.Style.FILL
+        mWheelPaint?.color = mWheelBgColor
+        mWheelPaint?.isDither = true
         mGuidePaint = Paint(Paint.ANTI_ALIAS_FLAG)
-        mGuidePaint!!.strokeWidth = mGuideLineWidth.toFloat()
-        mGuidePaint!!.color = mGuideLineColor
-        mGuidePaint!!.isDither = true
-        mGuidePaint!!.style = Paint.Style.STROKE
+        mGuidePaint?.strokeWidth = mGuideLineWidth.toFloat()
+        mGuidePaint?.color = mGuideLineColor
+        mGuidePaint?.isDither = true
+        mGuidePaint?.style = Paint.Style.STROKE
         mTrianglePath = Path()
     }
 
@@ -258,8 +255,7 @@ open class CursorWheelLayout : ViewGroup {
             if (child.visibility == GONE) {
                 continue
             }
-            var makeMeasureSpec = -1
-            makeMeasureSpec = if (child.id == R.id.id_wheel_menu_center_item) {
+            val makeMeasureSpec: Int = if (child.id == R.id.id_wheel_menu_center_item) {
                 MeasureSpec.makeMeasureSpec(
                     (mRootDiameter * mCenterRadioDimension).toInt(),
                     childMode
@@ -295,10 +291,10 @@ open class CursorWheelLayout : ViewGroup {
      */
     private fun initTriangle() {
         val layoutRadial = (mRootDiameter / 2.0).toInt()
-        mTrianglePath!!.moveTo(layoutRadial - mTriangleHeight.toFloat(), 0f)
-        mTrianglePath!!.lineTo(layoutRadial.toFloat(), 0 - mTriangleHeight / 2.0f)
-        mTrianglePath!!.lineTo(layoutRadial.toFloat(), 0 + mTriangleHeight / 2.0f)
-        mTrianglePath!!.close()
+        mTrianglePath?.moveTo(layoutRadial - mTriangleHeight.toFloat(), 0f)
+        mTrianglePath?.lineTo(layoutRadial.toFloat(), 0 - mTriangleHeight / 2.0f)
+        mTrianglePath?.lineTo(layoutRadial.toFloat(), 0 + mTriangleHeight / 2.0f)
+        mTrianglePath?.close()
     }
 
     /**
@@ -318,8 +314,6 @@ open class CursorWheelLayout : ViewGroup {
         val layoutDiameter = mRootDiameter
         val layoutRadial = (layoutDiameter / 2.0).toInt()
         val childCount = childCount
-        var left: Int
-        var top: Int
         // size of menu item
         val cWidth = (layoutDiameter * mMenuRadioDimension).toInt()
         val angleDelay: Float = if (centerItem != null) {
@@ -330,7 +324,7 @@ open class CursorWheelLayout : ViewGroup {
         //angle diff [0,360)
         var minimumAngleDiff = -1.0
         var angleDiff: Double
-        var includedAngle = 0.0
+        var includedAngle: Double
         for (i in 0 until childCount) {
             val child = getChildAt(i)
             if (child.id == R.id.id_wheel_menu_center_item) {
@@ -344,7 +338,7 @@ open class CursorWheelLayout : ViewGroup {
             //            }
             //menu 's angle relative to 0°
             child.setTag(R.id.id_wheel_view_angle, mStartAngle)
-            angleDiff = Math.abs(mSelectedAngle - includedAngle)
+            angleDiff = abs(mSelectedAngle - includedAngle)
             angleDiff = if (angleDiff >= 180) 360 - angleDiff else angleDiff
             //find the intentional selected item
             if (minimumAngleDiff == -1.0 || minimumAngleDiff > angleDiff) {
@@ -358,18 +352,21 @@ open class CursorWheelLayout : ViewGroup {
                 //allowable error
                 mNeedSlotIntoCenter = minimumAngleDiff.toInt() != 0
             }
-            // 计算，中心点到menu item中心的距离
+            // Calculation, center point to menu item distance from center
             val tmp = layoutRadial - cWidth / 2 - mPadding
 
-            // {tmp*cos(a)-1/2*width}即menu item相对中心点的横坐标
-            left = (layoutRadial
-                    + (tmp
-                    * cos(Math.toRadians(mStartAngle)) - 1 / 2f
-                    * cWidth).roundToInt())
+            // {tmp*cos(a)-1/2*width} which is menu item, the abscissa relative to the center
+            val sRelativeCenter = (tmp * cos(Math.toRadians(mStartAngle)) - 1 / 2f * cWidth)
+            val left = if (!sRelativeCenter.isNaN())
+                layoutRadial + sRelativeCenter.roundToInt()
+            else layoutRadial
 
-            //{tmp*sin(a)-1/2*height}即menu item相对中心点的纵坐标
-            top = (layoutRadial
-                    + (tmp * sin(Math.toRadians(mStartAngle)) - 1 / 2f * cWidth).roundToInt())
+            //{tmp*sin(a)-1/2*height} which is menu item, the ordinate relative to the center point
+            val oRelativeCenter = (tmp * sin(Math.toRadians(mStartAngle)) - 1 / 2f * cWidth)
+            val top = if (!oRelativeCenter.isNaN())
+                layoutRadial + oRelativeCenter.roundToInt()
+            else layoutRadial
+
             child.layout(left, top, left + cWidth, top + cWidth)
             val angel: Float = when (itemRotateMode) {
                 ITEM_ROTATE_MODE_NONE -> 0f
@@ -429,48 +426,6 @@ open class CursorWheelLayout : ViewGroup {
         canvas.rotate(mSelectedAngle.toFloat(), 0f, 0f)
         canvas.drawPath(mTrianglePath!!, mCursorPaint!!)
         canvas.restore()
-        if (mIsDebug) {
-            canvas.save()
-            canvas.translate(mRootDiameter / 2f, mRootDiameter / 2f)
-            canvas.drawCircle(0f, 0f, 10f, mCursorPaint!!)
-            val angleDelay: Float
-            val startIndex: Int
-            if (centerItem != null) {
-                angleDelay = 360 / (childCount - 1).toFloat()
-                startIndex = 1
-            } else {
-                angleDelay = 360 / childCount.toFloat()
-                startIndex = 0
-            }
-            run {
-                var i = 0
-                while (i < 360) {
-                    canvas.save()
-                    canvas.rotate(i.toFloat())
-                    mCursorPaint!!.textAlign = Paint.Align.RIGHT
-                    mCursorPaint!!.textSize = 28f
-                    canvas.drawText("$i°", mRootDiameter / 2f, 0f, mCursorPaint!!)
-                    canvas.restore()
-                    i += angleDelay.toInt()
-                }
-            }
-            canvas.restore()
-            canvas.save()
-            canvas.translate(mRootDiameter / 2f, mRootDiameter / 2f)
-            val child = getChildAt(startIndex)
-            var startAngel =
-                ((child.getTag(R.id.id_wheel_view_angle) as Double + angleDelay / 2f) % 360).toInt()
-            for (i in startIndex until childCount) {
-                canvas.save()
-                canvas.rotate(startAngel.toFloat())
-                canvas.drawLine(0f, 0f, mRootDiameter / 2f, 0f, mCursorPaint!!)
-                mCursorPaint!!.textAlign = Paint.Align.RIGHT
-                mCursorPaint!!.textSize = 38f
-                startAngel += angleDelay.toInt()
-                canvas.restore()
-            }
-            canvas.restore()
-        }
         val angleDelay: Float
         val startIndex: Int
         if (centerItem != null) {
@@ -523,12 +478,12 @@ open class CursorWheelLayout : ViewGroup {
             }
             MotionEvent.ACTION_MOVE -> {
                 /**
-                 * 获得开始的角度
+                 * Get the starting angle
                  */
                 val start = getAngle(mLastX, mLastY)
 
                 /**
-                 * 获得当前的角度
+                 * Get the current angle
                  */
                 val end = getAngle(x, y)
 
@@ -632,22 +587,18 @@ open class CursorWheelLayout : ViewGroup {
         }
     }
 
-    fun setDebug(debug: Boolean) {
-        mIsDebug = debug
-    }
-
     fun setAdapter(adapter: CycleWheelAdapter?) {
-        requireNotNull(adapter) { "Can not set a null adbapter to CursorWheelLayout!!!" }
+        requireNotNull(adapter) { "Can not set a null adapter to CursorWheelLayout!!!" }
         if (mWheelAdapter != null) {
             if (mWheelDataSetObserver != null) {
-                mWheelAdapter!!.unregisterDataSetObserver(mWheelDataSetObserver!!)
+                mWheelAdapter?.unregisterDataSetObserver(mWheelDataSetObserver!!)
             }
             removeAllViews()
             mWheelDataSetObserver = null
         }
         mWheelAdapter = adapter
         mWheelDataSetObserver = WheelDataSetObserver()
-        mWheelAdapter!!.registerDataSetObserver(mWheelDataSetObserver!!)
+        mWheelAdapter?.registerDataSetObserver(mWheelDataSetObserver!!)
         addMenuItems()
     }
 
@@ -693,9 +644,7 @@ open class CursorWheelLayout : ViewGroup {
      */
     private val defaultWidth: Int
         get() {
-            val wm = context.getSystemService(
-                Context.WINDOW_SERVICE
-            ) as WindowManager
+            val wm = context.getSystemService(Context.WINDOW_SERVICE) as WindowManager
             val outMetrics = DisplayMetrics()
             wm.defaultDisplay.getMetrics(outMetrics)
             return outMetrics.widthPixels.coerceAtMost(outMetrics.heightPixels)
@@ -708,12 +657,7 @@ open class CursorWheelLayout : ViewGroup {
             scrollIntoSlots()
         }
     }
-    /**
-     * Scrolls the items so that the selected item is in its 'slot' (its center
-     * is the Wheel's center).
-     *
-     * @param showAnimation Weather show fling animation or not
-     */
+
     /**
      * Scrolls the items so that the selected item is in its 'slot' (its center
      * is the Wheel's center).
@@ -737,7 +681,7 @@ open class CursorWheelLayout : ViewGroup {
             }
         } else {
             val angle: Double = try {
-                mTempSelectedView!!.getTag(R.id.id_wheel_view_angle) as Double
+                mTempSelectedView?.getTag(R.id.id_wheel_view_angle) as Double
             } catch (e: NullPointerException) {
                 return
             }
@@ -772,7 +716,7 @@ open class CursorWheelLayout : ViewGroup {
      */
     private fun selectionChangeCallback() {
         if (mOnMenuSelectedListener != null) {
-            mOnMenuSelectedListener!!.onItemSelected(this, mSelectedView, selectedPosition)
+            mOnMenuSelectedListener?.onItemSelected(this, mSelectedView, selectedPosition)
         }
     }
 
@@ -840,9 +784,6 @@ open class CursorWheelLayout : ViewGroup {
             mInitStarAngle = mStartAngle
             mEndAngle = mSweepAngle + mInitStarAngle
             mBiggerBefore = mInitStarAngle >= mEndAngle
-            //            if (BuildConfig.DEBUG) {
-//                Log.d(TAG, "startUsingAngle() called with: " + "angle = [" + angle + "]" + ",mStartAngle:" + mInitStarAngle + ",mEndAngle:" + mEndAngle);
-//            }
             post(this)
         }
 
@@ -903,7 +844,7 @@ open class CursorWheelLayout : ViewGroup {
             mNeedSlotIntoCenter = true
             scrollIntoSlots()
             if (mOnMenuItemClickListener != null) {
-                mOnMenuItemClickListener!!.onItemClick(v, mPosition)
+                mOnMenuItemClickListener?.onItemClick(v, mPosition)
             }
         }
     }
@@ -945,7 +886,7 @@ open class CursorWheelLayout : ViewGroup {
     }
 
     override fun onDetachedFromWindow() {
-        //removeAllViews()
+        //removeAllViews
         super.onDetachedFromWindow()
         mFlingRunnable.stop(false)
         mIsFirstLayout = false
@@ -956,7 +897,9 @@ open class CursorWheelLayout : ViewGroup {
      *
      * @param v
      */
-    protected open fun onInnerItemSelected(v: View?) {}
+    protected open fun onInnerItemSelected(v: View?) {
+        //No implementation
+    }
 
     /**
      * to do whatever you want to perform the unselected view
