@@ -4,7 +4,12 @@ import android.annotation.TargetApi
 import android.content.Context
 import android.database.DataSetObservable
 import android.database.DataSetObserver
-import android.graphics.*
+import android.graphics.Canvas
+import android.graphics.Matrix
+import android.graphics.Paint
+import android.graphics.Path
+import android.graphics.RectF
+import android.graphics.Region
 import android.os.Build
 import android.util.AttributeSet
 import android.util.DisplayMetrics
@@ -14,7 +19,12 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
 import androidx.annotation.ColorInt
-import kotlin.math.*
+import kotlin.math.abs
+import kotlin.math.asin
+import kotlin.math.cos
+import kotlin.math.hypot
+import kotlin.math.roundToInt
+import kotlin.math.sin
 
 /**
  * The base cycle wheel menu layout with cursor
@@ -476,6 +486,7 @@ open class CursorWheelLayout : ViewGroup {
                     return true
                 }
             }
+
             MotionEvent.ACTION_MOVE -> {
                 /**
                  * Get the starting angle
@@ -502,6 +513,7 @@ open class CursorWheelLayout : ViewGroup {
                 mLastX = x
                 mLastY = y
             }
+
             MotionEvent.ACTION_CANCEL, MotionEvent.ACTION_UP -> {
                 // 计算，每秒移动的角度
                 val anglePerSecond = (mTmpAngle * 1000

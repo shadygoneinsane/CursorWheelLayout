@@ -1,0 +1,9 @@
+[versions]
+androidMavenGradlePlugin = "2.1"
+gradle = "8.7.2"
+
+[libraries]
+gradle = { module = "com.android.tools.build:gradle", version.ref = "gradle" }
+android-maven-gradle-plugin = { module = "com.github.dcendents:android-maven-gradle-plugin", version.ref = "androidMavenGradlePlugin" }
+
+[plugins]

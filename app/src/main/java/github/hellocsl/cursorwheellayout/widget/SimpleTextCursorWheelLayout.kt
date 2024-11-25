@@ -4,7 +4,7 @@ import android.content.Context
 import android.util.AttributeSet
 import android.view.View
 import github.hellocsl.cursorwheel.CursorWheelLayout
-import github.hellocsl.cursorwheellayout.R
+import github.hellocsl.cursorwheel.demo.R
 
 /**
  *

@@ -14,7 +14,7 @@ import android.util.AttributeSet
 import android.view.SoundEffectConstants
 import android.view.View
 import androidx.annotation.ColorInt
-import github.hellocsl.cursorwheellayout.R
+import github.hellocsl.cursorwheel.demo.R
 
 /**
  *
@@ -404,8 +404,8 @@ class SwitchButton : View {
         //    private static final int DEFAULT_UNCHECK_REVEAL_COLOR = 0X1D1F22;
         private const val DEFAULT_CHECK_REVEAL_COLOR = -0x3ad6
         private const val DEFAULT_DISABLE_COVER_COLOR = 0x4cffffff
-        private const val DEFAULT_CHECK_DRAWABLE_ID = R.mipmap.ic_launcher
-        private const val DEFAULT_UNCHECK_DRAWABLE_ID = R.mipmap.ic_launcher
+        private val DEFAULT_CHECK_DRAWABLE_ID = R.mipmap.ic_launcher
+        private val DEFAULT_UNCHECK_DRAWABLE_ID = R.mipmap.ic_launcher
         private const val DEFAULT_SIZE = 126 //dp
         fun resolveSizeAndState(desireSize: Int, measureSpec: Int): Int {
             var result = desireSize

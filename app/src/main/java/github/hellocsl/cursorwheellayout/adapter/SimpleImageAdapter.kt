@@ -5,7 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.widget.ImageView
 import github.hellocsl.cursorwheel.CursorWheelLayout.CycleWheelAdapter
-import github.hellocsl.cursorwheellayout.R
+import github.hellocsl.cursorwheel.demo.R
 import github.hellocsl.cursorwheellayout.data.ImageData
 
 /**

@@ -5,35 +5,42 @@ plugins {
 }
 
 android {
-    compileSdkVersion 30
-    buildToolsVersion "30.0.3"
 
     defaultConfig {
         applicationId "github.hellocsl.cursorwheel"
+        compileSdk 34
+        targetSdkVersion 34
         minSdkVersion 14
-        targetSdkVersion 30
-        versionCode 3
-        versionName "2.0.01"
+        versionCode 4
+        versionName "2.0.03"
+        multiDexEnabled true
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
     buildTypes {
+        debug {
+            minifyEnabled false
+        }
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
+
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
     }
+
     kotlinOptions {
-        jvmTarget = '1.8'
+        jvmTarget = JavaVersion.VERSION_17
     }
+
     buildFeatures {
         dataBinding true
     }
+    namespace 'github.hellocsl.cursorwheel.demo'
 }
 
 dependencies {

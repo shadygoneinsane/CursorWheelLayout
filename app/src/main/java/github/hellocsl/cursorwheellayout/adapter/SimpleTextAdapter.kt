@@ -9,7 +9,7 @@ import android.widget.FrameLayout
 import android.widget.TextView
 import androidx.core.app.ActivityCompat
 import github.hellocsl.cursorwheel.CursorWheelLayout.CycleWheelAdapter
-import github.hellocsl.cursorwheellayout.R
+import github.hellocsl.cursorwheel.demo.R
 import github.hellocsl.cursorwheellayout.data.MenuItemData
 
 /**
