@@ -1,4 +1,4 @@
-package github.hellocsl.cursorwheel
+package com.cursorwheel
 
 import android.annotation.TargetApi
 import android.content.Context

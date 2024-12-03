@@ -50,7 +50,7 @@ Step 2. Add the dependency
 ## Usage
 1) Add a custom view in Xml
 ```xml
-  <github.hellocsl.cursorwheel.CursorWheelLayout
+  <com.cursorwheel.CursorWheelLayout
         android:id="@+id/test_circle_menu_right"
         android:layout_width="306dip"
         android:layout_height="306dip"
@@ -63,14 +63,14 @@ Step 2. Add the dependency
         app:wheelFlingValue="460"
         app:wheelSelectedAngle="225">
 
-        <github.hellocsl.cursorwheellayout.widget.SwitchButton
+        <com.cursorwheellayout.widget.SwitchButton
             android:id="@id/id_wheel_menu_center_item"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:boardWidth="0dip"
             app:uncheckRevealColor="#ff2a2f36"
         />
-    </github.hellocsl.cursorwheel.CursorWheelLayout>
+    </com.cursorwheel.CursorWheelLayout>
 
 ```
 2) Define your `WheelCycleAdapter`

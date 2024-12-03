@@ -1,4 +1,4 @@
-package github.hellocsl.cursorwheellayout.adapter
+package com.cursorwheellayout.adapter
 
 import android.content.Context
 import android.util.TypedValue
@@ -8,9 +8,9 @@ import android.view.View
 import android.widget.FrameLayout
 import android.widget.TextView
 import androidx.core.app.ActivityCompat
-import github.hellocsl.cursorwheel.CursorWheelLayout.CycleWheelAdapter
-import github.hellocsl.cursorwheel.demo.R
-import github.hellocsl.cursorwheellayout.data.MenuItemData
+import com.cursorwheel.CursorWheelLayout.CycleWheelAdapter
+import com.cursorwheel.demo.R
+import com.cursorwheellayout.data.MenuItemData
 
 /**
  * Created by chensuilun on 16/4/24.

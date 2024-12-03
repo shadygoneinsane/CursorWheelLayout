@@ -7,7 +7,7 @@ plugins {
 android {
 
     defaultConfig {
-        applicationId "github.hellocsl.cursorwheel"
+        applicationId "com.cursorwheel"
         compileSdk 34
         targetSdkVersion 34
         minSdkVersion 14
@@ -40,7 +40,7 @@ android {
     buildFeatures {
         dataBinding true
     }
-    namespace 'github.hellocsl.cursorwheel.demo'
+    namespace 'com.cursorwheel.demo'
 }
 
 dependencies {
@@ -52,8 +52,4 @@ dependencies {
     implementation 'androidx.constraintlayout:constraintlayout:2.0.4'
     implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.2.0'
     implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.2.0'
-
-    testImplementation 'junit:junit:4.13.1'
-    androidTestImplementation 'androidx.test.ext:junit:1.1.2'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
 }

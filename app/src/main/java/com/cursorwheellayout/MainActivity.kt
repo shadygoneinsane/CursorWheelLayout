@@ -1,4 +1,4 @@
-package github.hellocsl.cursorwheellayout
+package com.cursorwheellayout
 
 import android.os.Bundle
 import android.view.Gravity
@@ -6,14 +6,14 @@ import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
-import github.hellocsl.cursorwheel.CursorWheelLayout
-import github.hellocsl.cursorwheel.CursorWheelLayout.OnMenuSelectedListener
-import github.hellocsl.cursorwheel.demo.R
-import github.hellocsl.cursorwheel.demo.databinding.ActivityMainBinding
-import github.hellocsl.cursorwheellayout.adapter.SimpleImageAdapter
-import github.hellocsl.cursorwheellayout.adapter.SimpleTextAdapter
-import github.hellocsl.cursorwheellayout.data.ImageData
-import github.hellocsl.cursorwheellayout.data.MenuItemData
+import com.cursorwheel.CursorWheelLayout
+import com.cursorwheel.CursorWheelLayout.OnMenuSelectedListener
+import com.cursorwheel.demo.R
+import com.cursorwheel.demo.databinding.ActivityMainBinding
+import com.cursorwheellayout.adapter.SimpleImageAdapter
+import com.cursorwheellayout.adapter.SimpleTextAdapter
+import com.cursorwheellayout.data.ImageData
+import com.cursorwheellayout.data.MenuItemData
 import java.util.*
 
 class MainActivity : AppCompatActivity(), OnMenuSelectedListener {

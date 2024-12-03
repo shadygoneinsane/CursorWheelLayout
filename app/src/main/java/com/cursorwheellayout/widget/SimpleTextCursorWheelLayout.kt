@@ -1,10 +1,10 @@
-package github.hellocsl.cursorwheellayout.widget
+package com.cursorwheellayout.widget
 
 import android.content.Context
 import android.util.AttributeSet
 import android.view.View
-import github.hellocsl.cursorwheel.CursorWheelLayout
-import github.hellocsl.cursorwheel.demo.R
+import com.cursorwheel.CursorWheelLayout
+import com.cursorwheel.demo.R
 
 /**
  *

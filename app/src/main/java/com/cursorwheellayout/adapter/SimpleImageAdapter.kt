@@ -1,12 +1,12 @@
-package github.hellocsl.cursorwheellayout.adapter
+package com.cursorwheellayout.adapter
 
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.ImageView
-import github.hellocsl.cursorwheel.CursorWheelLayout.CycleWheelAdapter
-import github.hellocsl.cursorwheel.demo.R
-import github.hellocsl.cursorwheellayout.data.ImageData
+import com.cursorwheel.CursorWheelLayout.CycleWheelAdapter
+import com.cursorwheel.demo.R
+import com.cursorwheellayout.data.ImageData
 
 /**
  * Created by chensuilun on 16/4/24.

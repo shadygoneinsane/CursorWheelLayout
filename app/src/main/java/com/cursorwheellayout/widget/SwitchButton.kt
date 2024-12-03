@@ -1,4 +1,4 @@
-package github.hellocsl.cursorwheellayout.widget
+package com.cursorwheellayout.widget
 
 import android.animation.ArgbEvaluator
 import android.animation.ObjectAnimator
@@ -14,7 +14,7 @@ import android.util.AttributeSet
 import android.view.SoundEffectConstants
 import android.view.View
 import androidx.annotation.ColorInt
-import github.hellocsl.cursorwheel.demo.R
+import com.cursorwheel.demo.R
 
 /**
  *
