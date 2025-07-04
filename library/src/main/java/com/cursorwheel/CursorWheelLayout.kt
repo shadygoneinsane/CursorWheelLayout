@@ -14,6 +14,7 @@ import android.os.Build
 import android.util.AttributeSet
 import android.util.DisplayMetrics
 import android.util.Log
+import android.view.HapticFeedbackConstants
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
@@ -117,7 +118,8 @@ open class CursorWheelLayout : ViewGroup {
     private var mTempSelectedPosition = INVALID_POSITION
 
     /**
-     * 判断是否需要滚动到最中间，某些时候由于选中角度和布局中心的角度一样，所以不需要在进行一次移动
+     * Determine whether scrolling to center is needed. Sometimes the selected angle
+     * is the same as the layout center angle, so no additional movement is needed
      */
     private var mNeedSlotIntoCenter = false
     private val mFlingRunnable: FlingRunnable = FlingRunnable()
@@ -165,6 +167,11 @@ open class CursorWheelLayout : ViewGroup {
     private val mGuidePath = Path()
     private var mGuidePaint: Paint? = null
     private var itemRotateMode = ITEM_ROTATE_MODE_NONE
+    
+    /**
+     * Enable haptic feedback during scrolling
+     */
+    private var mHapticFeedbackEnabled = true
 
     @JvmOverloads
     constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0) : super(
@@ -262,7 +269,7 @@ open class CursorWheelLayout : ViewGroup {
         val childMode = MeasureSpec.EXACTLY
         for (i in 0 until count) {
             val child = getChildAt(i)
-            if (child.visibility == GONE) {
+            if (child.visibility == View.GONE) {
                 continue
             }
             val makeMeasureSpec: Int = if (child.id == R.id.id_wheel_menu_center_item) {
@@ -318,6 +325,21 @@ open class CursorWheelLayout : ViewGroup {
 
     fun setOnMenuSelectedListener(onMenuSelectedListener: OnMenuSelectedListener) {
         mOnMenuSelectedListener = onMenuSelectedListener
+    }
+    
+    /**
+     * Enable or disable haptic feedback during wheel interactions
+     * @param enabled true to enable haptic feedback, false to disable
+     */
+    fun setWheelHapticFeedbackEnabled(enabled: Boolean) {
+        mHapticFeedbackEnabled = enabled
+    }
+    
+    /**
+     * @return true if haptic feedback is enabled
+     */
+    fun isWheelHapticFeedbackEnabled(): Boolean {
+        return mHapticFeedbackEnabled
     }
 
     override fun onLayout(changed: Boolean, l: Int, t: Int, r: Int, b: Int) {
@@ -392,7 +414,7 @@ open class CursorWheelLayout : ViewGroup {
         //layout center menu
         val cView = findViewById<View>(R.id.id_wheel_menu_center_item)
         if (cView != null) {
-            // 设置center item位置
+            // Set center item position
             val cl = layoutRadial - cView.measuredWidth / 2
             val cr = cl + cView.measuredWidth
             cView.layout(cl, cl, cr, cr)
@@ -498,27 +520,37 @@ open class CursorWheelLayout : ViewGroup {
                  */
                 val end = getAngle(x, y)
 
-                // 如果是一、四象限，则直接(end-start)代表角度改变值（正是上移动负是下拉）
+                // If in quadrants 1 or 4, (end-start) directly represents angle change (positive = up, negative = down)
                 if (getQuadrant(x, y) == 1 || getQuadrant(x, y) == 4) {
                     mStartAngle += end - start.toDouble()
                     mTmpAngle += end - start
-                } else  // 二、三象限，(start - end)代表角度改变值
+                } else  // For quadrants 2 and 3, (start - end) represents angle change
                 {
                     mStartAngle += start - end.toDouble()
                     mTmpAngle += start - end
                 }
+                if (!mIsDraging && mHapticFeedbackEnabled) {
+                    // Provide subtle haptic feedback when dragging starts
+                    performHapticFeedback(
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                            HapticFeedbackConstants.CONTEXT_CLICK
+                        } else {
+                            HapticFeedbackConstants.VIRTUAL_KEY
+                        }
+                    )
+                }
                 mIsDraging = true
-                // 重新布局
+                // Re-layout
                 requestLayout()
                 mLastX = x
                 mLastY = y
             }
 
             MotionEvent.ACTION_CANCEL, MotionEvent.ACTION_UP -> {
-                // 计算，每秒移动的角度
+                // Calculate angle moved per second
                 val anglePerSecond = (mTmpAngle * 1000
                         / (System.currentTimeMillis() - mDownTime))
-                // 如果达到该值认为是快速移动
+                // If this value is reached, consider it fast movement
                 if (Math.abs(anglePerSecond) > mFlingableValue && !mIsFling) {
                     mFlingRunnable.startUsingVelocity(anglePerSecond)
                     return true
@@ -527,7 +559,7 @@ open class CursorWheelLayout : ViewGroup {
                 mIsDraging = false
                 mFlingRunnable.stop(false)
                 scrollIntoSlots()
-                // 如果当前旋转角度超过NOCLICK_VALUE屏蔽点击
+                // If current rotation angle exceeds NOCLICK_VALUE, block clicks
                 if (Math.abs(mTmpAngle) > NOCLICK_VALUE) {
                     return true
                 }
@@ -561,20 +593,20 @@ open class CursorWheelLayout : ViewGroup {
     }
 
     /**
-     * 如果触摸事件交由自己处理，都接受好了
+     * If touch events are handled by ourselves, accept them all
      */
     override fun onTouchEvent(event: MotionEvent): Boolean {
         return true
     }
 
     /**
-     * 根据触摸的位置，计算角度返
+     * Calculate angle based on touch position
      *
      * @param xTouch
      * @param yTouch
-     * @return 返回的是普通数字所代表的最小夹角的角度值，如45度就是45而不是1/4×PI;
-     * 如果是钝角，如315度，返回结果是-45;
-     * 而需要注意的是在同水平方向返回值都为0，垂直方向为90/-90
+     * @return Returns the minimum angle value represented by normal numbers, e.g., 45 degrees is 45, not 1/4×PI;
+     * For obtuse angles like 315 degrees, returns -45;
+     * Note: horizontal direction returns 0, vertical direction returns 90/-90
      */
     private fun getAngle(xTouch: Float, yTouch: Float): Float {
         val x = xTouch - mRootDiameter / 2.0
@@ -583,7 +615,7 @@ open class CursorWheelLayout : ViewGroup {
     }
 
     /**
-     * 根据当前位置计算象限
+     * Calculate quadrant based on current position
      *
      * @param x
      * @param y
@@ -690,6 +722,17 @@ open class CursorWheelLayout : ViewGroup {
                 mTempSelectedView = null
                 mTempSelectedPosition = INVALID_POSITION
                 selectionChangeCallback()
+                
+                // Provide haptic feedback when item selection changes
+                if (mHapticFeedbackEnabled) {
+                    performHapticFeedback(
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                            HapticFeedbackConstants.CLOCK_TICK
+                        } else {
+                            HapticFeedbackConstants.VIRTUAL_KEY
+                        }
+                    )
+                }
             }
         } else {
             val angle: Double = try {
@@ -739,22 +782,22 @@ open class CursorWheelLayout : ViewGroup {
      */
     private inner class FlingRunnable : Runnable {
         /**
-         * 滑动速度
+         * Scrolling velocity
          */
         private var mAngelPerSecond = 0f
 
         /**
-         * 是否以旋转某个角度为目的
+         * Whether the purpose is to rotate to a specific angle
          */
         private var mStartUsingAngle = false
 
         /**
-         * 最终的角度
+         * Final angle
          */
         private var mEndAngle = 0.0
 
         /**
-         * 需要旋转的角度
+         * Angle that needs to be rotated
          */
         private var mSweepAngle = 0.0
 
@@ -764,7 +807,8 @@ open class CursorWheelLayout : ViewGroup {
         private var mBiggerBefore = false
 
         /**
-         * 记录下开始转动的时候的startAngle，因为[CursorWheelLayout.mStartAngle]属于[0,360),如果直接用来和[FlingRunnable.mEndAngle]比较大小就会比较麻烦了
+         * Record the startAngle when rotation begins. Since [CursorWheelLayout.mStartAngle] is in [0,360),
+         * it would be troublesome to directly compare it with [FlingRunnable.mEndAngle]
          */
         private var mInitStarAngle = 0.0
         private fun startCommon() {

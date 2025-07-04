@@ -15,6 +15,7 @@
             android:layout_height="306dip"
             android:layout_gravity="center_vertical|bottom"
             android:layout_marginStart="-153dip"
+            android:layout_marginLeft="-153dip"
             app:wheelItemRotateMode="outward"
             app:wheelSelectedAngle="0">
 

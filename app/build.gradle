@@ -8,8 +8,8 @@ android {
 
     defaultConfig {
         applicationId "com.cursorwheel"
-        compileSdk 34
-        targetSdkVersion 34
+        compileSdk 35
+        targetSdk 35
         minSdkVersion 14
         versionCode 4
         versionName "2.0.03"
