@@ -14,7 +14,7 @@ import com.cursorwheellayout.adapter.SimpleImageAdapter
 import com.cursorwheellayout.adapter.SimpleTextAdapter
 import com.cursorwheellayout.data.ImageData
 import com.cursorwheellayout.data.MenuItemData
-import java.util.*
+import java.util.Random
 
 class MainActivity : AppCompatActivity(), OnMenuSelectedListener {
     private lateinit var viewBinding: ActivityMainBinding
