@@ -47,6 +47,10 @@ class LandingActivity : ComponentActivity() {
                         Button(onClick = { context.startActivity(Intent(context, ComposeInteroperabilityActivity::class.java)) }) {
                             Text("Compose Interoperability Demo")
                         }
+                        
+                        Button(onClick = { context.startActivity(Intent(context, SampleWheelActivity::class.java)) }) {
+                            Text("Old View-based Sample")
+                        }
                     }
                 }
             }

@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/background_dark"
+        tools:context=".MainActivity">
+
+        <com.cursorwheel.CursorWheelView
+            android:id="@+id/test_circle_menu_left"
+            android:layout_width="306dip"
+            android:layout_height="306dip"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="20dp"
+            app:layout_constraintTop_toBottomOf="@+id/test_circle_menu_top"
+            app:wheelBackgroundColor="@color/color_sample_bg"
+            app:wheelCursorColor="@color/red"
+            app:layout_constraintEnd_toStartOf="@+id/guide_left"
+            app:wheelCursorHeight="20dip"
+            app:wheelFlingValue="460"
+            app:wheelSelectedAngle="0"
+            app:wheelPaddingRadio="0.06"
+            app:wheelCenterRadio="0.30"
+            app:wheelItemRadio="0.20"
+            app:wheelItemRotateMode="2">
+
+            <com.cursorwheellayout.widget.SwitchButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:boardWidth="0dip"
+                app:uncheckRevealColor="#ff2a2f36" />
+        </com.cursorwheel.CursorWheelView>
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guide_left"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent="0.5" />
+
+        <com.cursorwheel.CursorWheelView
+            android:id="@+id/test_circle_menu_top"
+            android:layout_width="280dip"
+            android:layout_height="280dip"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="20dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:wheelBackgroundColor="@color/color_sample_bg"
+            app:wheelCursorColor="@color/teal"
+            app:wheelCursorHeight="19dip"
+            app:wheelFlingValue="460"
+            app:wheelSelectedAngle="270"
+            app:wheelPaddingRadio="0.06"
+            app:wheelCenterRadio="0.30"
+            app:wheelItemRadio="0.20"
+            app:wheelItemRotateMode="0">
+
+            <com.cursorwheellayout.widget.SwitchButton
+                android:id="@+id/id_wheel_menu_center_item"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:boardWidth="0dip"
+                app:uncheckRevealColor="#ff2a2f36" />
+        </com.cursorwheel.CursorWheelView>
+
+        <com.cursorwheel.CursorWheelView
+            android:id="@+id/test_circle_menu_right"
+            android:layout_width="306dip"
+            android:layout_height="306dip"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginEnd="-153dp"
+            android:layout_marginBottom="20dp"
+            app:layout_constraintStart_toEndOf="@id/test_circle_menu_left"
+            app:layout_constraintTop_toTopOf="@id/test_circle_menu_left"
+            app:wheelBackgroundColor="@color/color_sample_bg"
+            app:wheelCursorColor="@color/red"
+            app:wheelCursorHeight="20dip"
+            app:wheelFlingValue="460"
+            app:wheelSelectedAngle="225"
+            app:wheelPaddingRadio="0.06"
+            app:wheelCenterRadio="0.30"
+            app:wheelItemRadio="0.20"
+            app:wheelItemRotateMode="1">
+
+            <com.cursorwheellayout.widget.SwitchButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:boardWidth="0dip"
+                app:uncheckRevealColor="#ff2a2f36" />
+        </com.cursorwheel.CursorWheelView>
+
+        <Button
+            android:id="@+id/main_button_random_selected"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:text="Random Selected"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

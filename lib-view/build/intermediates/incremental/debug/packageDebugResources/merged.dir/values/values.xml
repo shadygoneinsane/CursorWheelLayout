@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="black">#000000</color>
+    <color name="gray">#808080</color>
+    <color name="red">#FF0000</color>
+    <color name="white">#FFFFFF</color>
+    <item name="id_wheel_menu_center_item" type="id"/>
+    <item name="id_wheel_view_angle" type="id"/>
+    <declare-styleable name="CursorWheelLayout">
+        <attr format="float" name="wheelSelectedAngle"/>
+        <attr format="float" name="wheelPaddingRadio"/>
+        <attr format="float" name="wheelCenterRadio"/>
+        <attr format="float" name="wheelItemRadio"/>
+        <attr format="float" name="wheelFlingValue"/>
+        <attr format="dimension" name="wheelCursorHeight"/>
+        <attr format="color" name="wheelCursorColor"/>
+        <attr format="color" name="wheelBackgroundColor"/>
+        <attr format="integer" name="wheelItemRotateMode"/>
+        <attr format="dimension" name="wheelGuideLineWidth"/>
+        <attr format="color" name="wheelGuideLineColor"/>
+    </declare-styleable>
+    <declare-styleable name="SwitchButton">
+        <attr format="dimension" name="boardWidth"/>
+        <attr format="color" name="uncheckRevealColor"/>
+        <attr format="reference" name="checkSrc"/>
+        <attr format="reference" name="uncheckSrc"/>
+        <attr format="color" name="checkRevealColor"/>
+    </declare-styleable>
+</resources>

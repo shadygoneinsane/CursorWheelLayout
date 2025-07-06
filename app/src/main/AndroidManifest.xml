@@ -20,6 +20,12 @@
             android:name="com.cursorwheellayout.ComposeInteroperabilityActivity"
             android:exported="true"
             android:label="Compose Interoperability Demo" />
+        
+        <activity
+            android:name="com.cursorwheellayout.SampleWheelActivity"
+            android:exported="true"
+            android:label="Old View-based Sample"
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name="com.cursorwheellayout.ComposeWheelActivity"
             android:exported="true"

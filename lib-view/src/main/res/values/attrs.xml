@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="CursorWheelLayout">
+        <attr name="wheelSelectedAngle" format="float" />
+        <attr name="wheelPaddingRadio" format="float" />
+        <attr name="wheelCenterRadio" format="float" />
+        <attr name="wheelItemRadio" format="float" />
+        <attr name="wheelFlingValue" format="float" />
+        <attr name="wheelCursorHeight" format="dimension" />
+        <attr name="wheelCursorColor" format="color" />
+        <attr name="wheelBackgroundColor" format="color" />
+        <attr name="wheelItemRotateMode" format="integer" />
+        <attr name="wheelGuideLineWidth" format="dimension" />
+        <attr name="wheelGuideLineColor" format="color" />
+    </declare-styleable>
+
+    <declare-styleable name="SwitchButton">
+        <attr name="boardWidth" format="dimension" />
+        <attr name="uncheckRevealColor" format="color" />
+        <attr name="checkSrc" format="reference" />
+        <attr name="uncheckSrc" format="reference" />
+        <attr name="checkRevealColor" format="color" />
+    </declare-styleable>
+</resources>

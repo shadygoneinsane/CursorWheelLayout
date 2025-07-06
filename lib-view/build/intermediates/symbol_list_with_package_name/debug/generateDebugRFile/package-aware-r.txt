@@ -1,0 +1,31 @@
+com.cursorwheel.view
+attr boardWidth
+attr checkRevealColor
+attr checkSrc
+attr uncheckRevealColor
+attr uncheckSrc
+attr wheelBackgroundColor
+attr wheelCenterRadio
+attr wheelCursorColor
+attr wheelCursorHeight
+attr wheelFlingValue
+attr wheelGuideLineColor
+attr wheelGuideLineWidth
+attr wheelItemRadio
+attr wheelItemRotateMode
+attr wheelPaddingRadio
+attr wheelSelectedAngle
+color black
+color gray
+color red
+color white
+drawable ic_switch_off
+drawable ic_switch_on
+id id_wheel_menu_center_item
+id id_wheel_view_angle
+id wheel_menu_item_iv
+id wheel_menu_item_tv
+layout wheel_image_item
+layout wheel_menu_item
+styleable CursorWheelLayout wheelBackgroundColor wheelCenterRadio wheelCursorColor wheelCursorHeight wheelFlingValue wheelGuideLineColor wheelGuideLineWidth wheelItemRadio wheelItemRotateMode wheelPaddingRadio wheelSelectedAngle
+styleable SwitchButton boardWidth checkRevealColor checkSrc uncheckRevealColor uncheckSrc

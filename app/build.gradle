@@ -55,7 +55,8 @@ android {
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation project(':library')
+    implementation project(':lib-compose')
+    implementation project(':lib-view')
     implementation libs.kotlin.stdlib
     implementation libs.core.ktx
     implementation libs.material

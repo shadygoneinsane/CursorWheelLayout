@@ -13,7 +13,7 @@
         android:orientation="vertical"
         app:layout_constraintGuide_percent="0.5" />
 
-    <com.cursorwheellayout.widget.SimpleTextCursorWheelLayout
+    <com.cursorwheellayout.widget.SimpleTextCursorWheelView
         android:id="@+id/circular_hour_menu"
         android:layout_width="@dimen/dp0"
         android:layout_height="@dimen/dp0"
