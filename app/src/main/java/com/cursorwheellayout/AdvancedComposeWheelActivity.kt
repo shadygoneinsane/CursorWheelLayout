@@ -5,7 +5,16 @@ import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
@@ -13,7 +22,12 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -21,13 +35,12 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.cursorwheel.compose.CursorWheelLayout
 import com.cursorwheel.compose.ItemRotationMode
+import com.cursorwheel.compose.rememberCursorWheelState
 import com.cursorwheel.demo.R
-import kotlin.random.Random
 
 class AdvancedComposeWheelActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -127,6 +140,7 @@ fun AdvancedWheelDemo() {
 @Composable
 fun DynamicDemo(onItemSelected: (String) -> Unit, onItemClick: (String) -> Unit) {
     var items by remember { mutableStateOf(listOf("A", "B", "C", "D", "E")) }
+    val state = rememberCursorWheelState()
 
     Column(horizontalAlignment = Alignment.CenterHorizontally) {
         Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
@@ -139,6 +153,7 @@ fun DynamicDemo(onItemSelected: (String) -> Unit, onItemClick: (String) -> Unit)
 
         CursorWheelLayout(
             items = items,
+            state = state,
             wheelSize = 260.dp,
             itemSize = 50.dp,
             selectedAngle = -90f,
@@ -154,6 +169,7 @@ fun DynamicDemo(onItemSelected: (String) -> Unit, onItemClick: (String) -> Unit)
 fun ProviderDemo(onItemSelected: (String) -> Unit, onItemClick: (String) -> Unit) {
     var itemCount by remember { mutableIntStateOf(8) }
     val items = remember(itemCount) { (1..itemCount).map { "Item $it" } }
+    val state = rememberCursorWheelState()
 
     Column(horizontalAlignment = Alignment.CenterHorizontally) {
         Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
@@ -166,6 +182,7 @@ fun ProviderDemo(onItemSelected: (String) -> Unit, onItemClick: (String) -> Unit
 
         CursorWheelLayout(
             items = items,
+            state = state,
             wheelSize = 280.dp,
             itemSize = 45.dp,
             selectedAngle = -90f,
@@ -196,6 +213,7 @@ fun IconDemo(onItemSelected: (String) -> Unit, onItemClick: (String) -> Unit) {
         )
     }
     var rotationMode by remember { mutableStateOf(ItemRotationMode.None) }
+    val state = rememberCursorWheelState()
 
     Column(horizontalAlignment = Alignment.CenterHorizontally) {
         Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
@@ -208,6 +226,7 @@ fun IconDemo(onItemSelected: (String) -> Unit, onItemClick: (String) -> Unit) {
 
         CursorWheelLayout(
             items = items,
+            state = state,
             wheelSize = 280.dp,
             itemSize = 60.dp,
             selectedAngle = -90f,
@@ -232,10 +251,12 @@ fun CustomDemo(onItemSelected: (String) -> Unit, onItemClick: (String) -> Unit) 
             UserItem(6, "Frank", "User", true)
         )
     }
+    val state = rememberCursorWheelState()
 
     Column(horizontalAlignment = Alignment.CenterHorizontally) {
         CursorWheelLayout(
             items = items,
+            state = state,
             wheelSize = 300.dp,
             itemSize = 55.dp,
             selectedAngle = -90f,

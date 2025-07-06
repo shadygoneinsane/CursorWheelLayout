@@ -2,52 +2,54 @@ package com.cursorwheellayout
 
 import android.content.Intent
 import android.os.Bundle
-import android.view.View
-import android.widget.Button
-import androidx.appcompat.app.AppCompatActivity
-import com.cursorwheel.demo.R
+import androidx.activity.ComponentActivity
+import androidx.activity.compose.setContent
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Button
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.unit.dp
 
-class LandingActivity : AppCompatActivity() {
-    
+class LandingActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setupStatusBar()
-        setContentView(R.layout.activity_landing)
-        
-        setupButtons()
-    }
-    
-    private fun setupStatusBar() {
-        // Clear any fullscreen flags to ensure status bar is visible
-        @Suppress("DEPRECATION")
-        window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_VISIBLE
-    }
-    
-    private fun setupButtons() {
-        val btnOriginalDemo = findViewById<Button>(R.id.btn_original_demo)
-        val btnSampleWheel = findViewById<Button>(R.id.btn_sample_wheel)
-        val btnComposeWheel = findViewById<Button>(R.id.btn_compose_wheel)
-        val btnAdvancedWheel = findViewById<Button>(R.id.btn_advanced_wheel)
-        val btnComposeMain = findViewById<Button>(R.id.btn_compose_main)
-        
-        btnOriginalDemo.setOnClickListener {
-            startActivity(Intent(this, MainActivity::class.java))
-        }
-        
-        btnSampleWheel.setOnClickListener {
-            startActivity(Intent(this, SampleWheelActivity::class.java))
-        }
-        
-        btnComposeWheel.setOnClickListener {
-            startActivity(Intent(this, ComposeWheelActivity::class.java))
-        }
-        
-        btnAdvancedWheel.setOnClickListener {
-            startActivity(Intent(this, AdvancedComposeWheelActivity::class.java))
-        }
-        
-        btnComposeMain.setOnClickListener {
-            startActivity(Intent(this, ComposeMainActivity::class.java))
+        setContent {
+            MaterialTheme {
+                Surface(
+                    modifier = Modifier.fillMaxSize(),
+                    color = Color(0xFF13171C)
+                ) {
+                    val context = LocalContext.current
+                    Column(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .padding(16.dp),
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        verticalArrangement = Arrangement.Center
+                    ) {
+                        Button(onClick = { context.startActivity(Intent(context, ComposeMainActivity::class.java)) }) {
+                            Text("Compose Main Demo")
+                        }
+                        Button(onClick = { context.startActivity(Intent(context, AdvancedComposeWheelActivity::class.java)) }) {
+                            Text("Advanced Compose Demo")
+                        }
+                        Button(onClick = { context.startActivity(Intent(context, ComposeWheelActivity::class.java)) }) {
+                            Text("Compose Wheel Demo")
+                        }
+                        Button(onClick = { context.startActivity(Intent(context, ComposeInteroperabilityActivity::class.java)) }) {
+                            Text("Compose Interoperability Demo")
+                        }
+                    }
+                }
+            }
         }
     }
 }

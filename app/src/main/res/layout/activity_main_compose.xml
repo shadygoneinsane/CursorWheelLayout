@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center"
+    tools:context=".MainActivity">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Compose Wheel in View System"
+        android:textColor="@android:color/white"
+        android:textSize="20sp"
+        android:layout_marginBottom="16dp"/>
+
+    <androidx.compose.ui.platform.ComposeView
+        android:id="@+id/compose_view_wheel"
+        android:layout_width="300dp"
+        android:layout_height="300dp"
+        android:layout_gravity="center"/>
+
+    <Button
+        android:id="@+id/btn_random_select"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Random Select Item (View System)"
+        android:layout_marginTop="24dp"/>
+
+</LinearLayout>

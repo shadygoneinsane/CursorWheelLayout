@@ -25,6 +25,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.cursorwheel.compose.CursorWheelLayout
 import com.cursorwheel.compose.ItemRotationMode
+import com.cursorwheel.compose.rememberCursorWheelState
 import com.cursorwheel.demo.R
 import kotlin.random.Random
 
@@ -51,7 +52,7 @@ data class ImageItem(val drawableRes: Int, val text: String)
 fun ComposeMainContent() {
     val context = LocalContext.current
 
-        val topWheelBackgroundColor = Color.Gray.copy(alpha = 0.3f)
+    val topWheelBackgroundColor = Color.Gray.copy(alpha = 0.3f)
     val leftWheelBackgroundColor = Color.Gray.copy(alpha = 0.3f)
     val rightWheelBackgroundColor = Color(0x7FFFC52A)
 
@@ -73,15 +74,20 @@ fun ComposeMainContent() {
         )
     }
 
+    val leftWheelState = rememberCursorWheelState()
+    val topWheelState = rememberCursorWheelState()
+    val rightWheelState = rememberCursorWheelState()
+
     Box(modifier = Modifier.fillMaxSize()) {
         Box(
             modifier = Modifier
                 .size(306.dp)
                 .align(Alignment.CenterStart)
-                .offset(x = (-153).dp, y = (-100).dp)
+                .offset(x = (-153).dp, y = (0).dp)
         ) {
             CursorWheelLayout(
                 items = textItems,
+                state = leftWheelState,
                 wheelSize = 306.dp,
                 itemSize = 50.dp,
                 selectedAngle = 0f,
@@ -106,6 +112,7 @@ fun ComposeMainContent() {
         ) {
             CursorWheelLayout(
                 items = imageItems,
+                state = topWheelState,
                 wheelSize = 280.dp,
                 itemSize = 60.dp,
                 selectedAngle = 270f,
@@ -143,6 +150,7 @@ fun ComposeMainContent() {
         ) {
             CursorWheelLayout(
                 items = textItems,
+                state = rightWheelState,
                 wheelSize = 306.dp,
                 itemSize = 50.dp,
                 selectedAngle = 225f,

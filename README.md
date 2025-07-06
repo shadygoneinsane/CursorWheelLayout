@@ -2,8 +2,14 @@
 
 CursorWheelLayout is a Jetpack Compose library that allows you to arrange items in a rotatable wheel, providing a unique and engaging way for users to select from a list. This library is a reimplementation of the original [CursorWheelLayout](https://github.com/BCsl/CursorWheelLayout) for modern Android development with Jetpack Compose.
 
-## Screenshot
+## Screenshots
 
+### Demo Application
+![Current Screen 1](screenshot/current_screen.png)
+![Current Screen 2](screenshot/current_screen_2.png)
+![Current Screen 3](screenshot/current_screen_3.png)
+
+### Original Demo (GIF)
 ![Compose-1](https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExZzVna2l6d2M3cWw5eGN6bXNqN3VnaWJsa3l6cW16Z3A0ZzVzZ3h6eCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/3oKIPa8xYQY1dG3pks/giphy.gif)
 
 ## Setup

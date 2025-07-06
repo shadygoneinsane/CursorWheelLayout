@@ -24,6 +24,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.cursorwheel.compose.CursorWheelLayout
 import com.cursorwheel.compose.ItemRotationMode
+import com.cursorwheel.compose.rememberCursorWheelState
 
 class ComposeWheelActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -53,9 +54,12 @@ fun ComposeWheelDemo() {
     var selectedItem by remember { mutableStateOf(currentItems.first()) }
     var lastClickedItem by remember { mutableStateOf("") }
 
+    val wheelState = rememberCursorWheelState()
+
     LaunchedEffect(currentItems) {
         selectedItem = currentItems.first()
         lastClickedItem = ""
+        wheelState.angle.snapTo(0f) // Reset wheel position when dataset changes
     }
 
     Column(
@@ -123,6 +127,7 @@ fun ComposeWheelDemo() {
 
         CursorWheelLayout(
             items = currentItems,
+            state = wheelState,
             modifier = Modifier,
             wheelSize = wheelSize,
             itemSize = itemSize,

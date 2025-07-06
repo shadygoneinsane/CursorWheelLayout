@@ -17,14 +17,9 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="com.cursorwheellayout.MainActivity"
+            android:name="com.cursorwheellayout.ComposeInteroperabilityActivity"
             android:exported="true"
-            android:label="Original Demo" />
-        <activity
-            android:name="com.cursorwheellayout.SampleWheelActivity"
-            android:exported="true"
-            android:label="Sample Wheel Demo"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:label="Compose Interoperability Demo" />
         <activity
             android:name="com.cursorwheellayout.ComposeWheelActivity"
             android:exported="true"
