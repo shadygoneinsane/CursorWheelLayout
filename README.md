@@ -1,157 +1,97 @@
-# CursorWheelLayout
+# CursorWheelLayout for Jetpack Compose
 
-CursorWheelLayout is an Android library that allows view to be placed on a rotatable wheel. It
-behaves like a Circular ListView where items rotate rather than scroll vertically(but without view
-recycle strategy).
-CursorWheelLayout consists of two components , the center item with id `id_wheel_menu_center_item`
-and the menu items that provided by CycleWheelAdapter.
-
-The CursorWheelLayout can be used as a way to select one item from a list. The `wheelSelectedAngle`
-attribute determines what position on the wheel is selected.
-You can also receive a callback for when an item is clicked, and whether it is selected. Have a look
-at the sample for a working example!
+CursorWheelLayout is a Jetpack Compose library that allows you to arrange items in a rotatable wheel, providing a unique and engaging way for users to select from a list. This library is a reimplementation of the original [CursorWheelLayout](https://github.com/BCsl/CursorWheelLayout) for modern Android development with Jetpack Compose.
 
 ## Screenshot
 
-![1]
-![2]
-
-## Apk
-
-[Download Demo here](https://github.com/BCsl/CursorWheelLayout/tree/master/demo/wheel-v1.01.apk)
+![Compose-1](https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExZzVna2l6d2M3cWw5eGN6bXNqN3VnaWJsa3l6cW16Z3A0ZzVzZ3h6eCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/3oKIPa8xYQY1dG3pks/giphy.gif)
 
 ## Setup
 
-### Gradle
+To integrate CursorWheelLayout into your Jetpack Compose project, follow these steps:
 
-o get a Git project into your build:
+**Step 1. Add the JitPack repository to your build file**
 
-Step 1. Add the JitPack repository to your build file
+Add it in your root `build.gradle` at the end of repositories:
 
-Add it in your root build.gradle at the end of repositories:
+```groovy
+allprojects {
+    repositories {
+        ...
+        maven { url 'https://jitpack.io' }
+    }
+}
+```
 
-	allprojects {
-		repositories {
-			...
-			maven { url 'https://jitpack.io' }
-		}
-	}
+**Step 2. Add the dependency**
 
-Step 2. Add the dependency
-
-	dependencies {
-	        implementation 'com.github.shadygoneinsane:CursorWheelLayout:v2.0.01'
-	}
-
-### Maven
-
-```xml
-
-<dependency>
-    <groupId>github.hellocsl</groupId>
-    <artifactId>CursorWheelLayout</artifactId>
-    <version>1.1.0</version>
-    <type>pom</type>
-</dependency>
+```groovy
+dependencies {
+    implementation 'com.github.shadygoneinsane:CursorWheelLayout:v3.0.0-compose'
+}
 ```
 
 ## Usage
 
-1) Add a custom view in Xml
+Using the `CursorWheelLayout` in your Jetpack Compose UI is straightforward. Here’s a basic example:
 
-```xml
+```kotlin
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import com.cursorwheel.compose.CursorWheelLayout
 
-<com.cursorwheel.CursorWheelLayout android:id="@+id/test_circle_menu_right"
-    android:layout_width="306dip" android:layout_height="306dip"
-    android:layout_gravity="center_vertical|right|bottom" android:layout_marginBottom="-153dp"
-    android:layout_marginRight="-153dip" app:wheelBackgroundColor="@color/colorAccent_Translucent"
-    app:wheelCursorColor="@color/red" app:wheelCursorHeight="20dip" app:wheelFlingValue="460"
-    app:wheelSelectedAngle="225">
+@Composable
+fun MyWheelSelector() {
+    val items = (1..10).map { "Item $it" }
 
-    <com.cursorwheellayout.widget.SwitchButton android:id="@id/id_wheel_menu_center_item"
-        android:layout_width="wrap_content" android:layout_height="wrap_content"
-        app:boardWidth="0dip" app:uncheckRevealColor="#ff2a2f36" />
-</com.cursorwheel.CursorWheelLayout>
-
-```
-
-2) Define your `WheelCycleAdapter`
-
-```java
-public class SimpleTextAdapter implements CursorWheelLayout.CycleWheelAdapter {
-
-    public int getCount() {
-        //...
+    CursorWheelLayout(
+        items = items,
+        modifier = Modifier
+    ) { index, item, isSelected ->
+        // Your item content here
     }
-
-    public View getView(View parent, int position) {
-        //...
-    }
-
-    public Object getItem(int position) {
-        //...
-    }
-
 }
 ```
 
-3) Set your `WheelCycleAdapter` similar to how you would set an adapter with a ListView
+### Customizing the Wheel
 
-```java
-        SimpleTextAdapter simpleTextAdapter = new SimpleTextAdapter(this, menuItemDatas);
-        mTestCircleMenuLeft.
+You can customize the appearance and behavior of the wheel using various parameters:
 
-setAdapter(simpleTextAdapter);
-```
-
-## Listener
-
-1) A listener for when the closest item to the `SelectionAngle` changes.
-
-```java
-      mTestCircleMenuTop.setOnMenuSelectedListener(new CursorWheelLayout.OnMenuSelectedListener() {
-    @Override
-    public void onItemSelected (CursorWheelLayout parent, View view,int pos){
-        Toast.makeText(MainActivity.this, "Top Menu selected position:" + pos, Toast.LENGTH_SHORT).show();
+```kotlin
+CursorWheelLayout(
+    items = items,
+    modifier = Modifier,
+    wheelSize = 300.dp,
+    itemSize = 80.dp,
+    selectedAngle = 90f,
+    itemRotationMode = ItemRotationMode.Inward,
+    onItemSelected = { index, item ->
+        // Handle item selection
+    },
+    onItemClick = { index, item ->
+        // Handle item click
     }
-});
+) { index, item, isSelected ->
+    // Your item content here
+}
 ```
 
-2) A listener for when an item is clicked.
+### Available Parameters
 
-```java
-        mTestCircleMenuTop.setOnMenuItemClickListener(new CursorWheelLayout.OnMenuItemClickListener() {
-    @Override
-    public void onItemClick (View view,int pos){
-        Toast.makeText(MainActivity.this, "Top Menu click position:" + pos, Toast.LENGTH_SHORT).show();
+Here are the key parameters you can use to customize the `CursorWheelLayout`:
 
-    }
-});
-```
-
-## Useful attributes
-
-Here are the custom attributes that can be declared in xml:
-
-* wheelSelectedAngle
-* wheelPaddingRadio
-* wheelCenterRadio
-* wheelItemRadio
-* wheelFlingValue
-* wheelCursorHeight
-* wheelCursorColor
-* wheelBackgroundColor
-* wheelItemRotateMode
-
-## Refer to
-
-http://blog.csdn.net/lmj623565791/article/details/43131133
+| Parameter | Type | Description |
+|---|---|---|
+| `items` | `List<T>` | The list of items to display in the wheel. |
+| `modifier` | `Modifier` | The modifier to apply to this layout. |
+| `wheelSize` | `Dp` | The size of the wheel. |
+| `itemSize` | `Dp` | The size of each item in the wheel. |
+| `selectedAngle` | `Float` | The angle at which the selected item is positioned. |
+| `itemRotationMode` | `ItemRotationMode` | The rotation mode for the items (`None`, `Inward`, `Outward`). |
+| `onItemSelected` | `(index: Int, item: T) -> Unit` | A callback that is invoked when an item is selected. |
+| `onItemClick` | `(index: Int, item: T) -> Unit` | A callback that is invoked when an item is clicked. |
 
 ## License
 
 Apache License Version 2.0
 http://apache.org/licenses/LICENSE-2.0.txt
-
-[1]: ./screenshot/gif2.gif
-
-[2]: ./screenshot/gif3.gif

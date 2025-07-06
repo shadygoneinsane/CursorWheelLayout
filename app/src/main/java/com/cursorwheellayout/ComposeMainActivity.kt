@@ -6,23 +6,13 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.offset
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -33,17 +23,11 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.cursorwheel.compose.CursorWheelAdapter
 import com.cursorwheel.compose.CursorWheelLayout
 import com.cursorwheel.compose.ItemRotationMode
-import com.cursorwheel.compose.ListCursorWheelAdapter
 import com.cursorwheel.demo.R
 import kotlin.random.Random
 
-/**
- * Compose-based replacement for MainActivity that replicates all the original functionality
- * using the enhanced CursorWheelCompose with full customization support
- */
 class ComposeMainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -66,22 +50,18 @@ data class ImageItem(val drawableRes: Int, val text: String)
 @Composable
 fun ComposeMainContent() {
     val context = LocalContext.current
-    
-    // Configuration for wheel backgrounds (make them configurable)
-    val topWheelBackgroundColor = Color.Transparent // Remove gray background
-    val leftWheelBackgroundColor = Color.Transparent // Remove gray background
-    val rightWheelBackgroundColor = Color(0x7FFFC52A) // Keep translucent yellow
-    
-    // Random selection state
+
+        val topWheelBackgroundColor = Color.Gray.copy(alpha = 0.3f)
+    val leftWheelBackgroundColor = Color.Gray.copy(alpha = 0.3f)
+    val rightWheelBackgroundColor = Color(0x7FFFC52A)
+
     var randomIndex by remember { mutableIntStateOf(0) }
-    
-    // Text data - same as original MainActivity
+
     val textItems = remember {
         listOf("0", "1", "2", "3", "4", "5", "6", "7", "8", "OFF")
             .map { TextItem(it) }
     }
-    
-    // Image data - same as original MainActivity  
+
     val imageItems = remember {
         listOf(
             ImageItem(R.drawable.ic_bank_bc, "0"),
@@ -92,14 +72,8 @@ fun ComposeMainContent() {
             ImageItem(R.drawable.ic_bank_jiaotong, "5")
         )
     }
-    
-    // Create adapters
-    val textAdapter = remember { ListCursorWheelAdapter(textItems) }
-    val imageAdapter = remember { ListCursorWheelAdapter(imageItems) }
 
     Box(modifier = Modifier.fillMaxSize()) {
-        
-        // Left wheel (bottom-left corner, partially visible) - Same as test_circle_menu_left
         Box(
             modifier = Modifier
                 .size(306.dp)
@@ -107,65 +81,60 @@ fun ComposeMainContent() {
                 .offset(x = (-153).dp, y = (-100).dp)
         ) {
             CursorWheelLayout(
-                adapter = textAdapter,
+                items = textItems,
                 wheelSize = 306.dp,
                 itemSize = 50.dp,
-                selectedAngle = 0f, // Same as original
-                itemRotationMode = ItemRotationMode.Outward, // Same as original
-                wheelBackgroundColor = leftWheelBackgroundColor, // Configurable background
-                onItemSelected = { index, item ->
-                    // Same functionality as original
-                },
-                onItemClick = { index, item ->
+                selectedAngle = 0f,
+                itemRotationMode = ItemRotationMode.Outward,
+                wheelBackgroundColor = leftWheelBackgroundColor,
+                onItemClick = { _, item ->
                     Toast.makeText(context, "Left wheel: ${item.text}", Toast.LENGTH_SHORT).show()
                 }
-            ) { index, item, isSelected ->
+            ) { _, item, isSelected ->
                 TextWheelItem(
                     text = item.text,
                     isSelected = isSelected,
-                    gravity = "center" // Same as original
+                    gravity = "center"
                 )
             }
         }
-        
-        // Top wheel (center-top) - Same as test_circle_menu_top 
+
         Box(
             modifier = Modifier
                 .size(280.dp)
                 .align(Alignment.TopCenter)
         ) {
             CursorWheelLayout(
-                adapter = imageAdapter,
+                items = imageItems,
                 wheelSize = 280.dp,
                 itemSize = 60.dp,
-                selectedAngle = 270f, // Same as original (top position)
-                itemRotationMode = ItemRotationMode.None, // Same as original
-                wheelBackgroundColor = topWheelBackgroundColor, // Configurable background
-                cursorColor = Color(0xFF009688), // Same teal color as original
-                cursorHeight = 19.dp, // Same as original
-                onItemSelected = { index, item ->
+                selectedAngle = 270f,
+                itemRotationMode = ItemRotationMode.None,
+                wheelBackgroundColor = topWheelBackgroundColor,
+                cursorColor = Color(0xFF009688),
+                cursorHeight = 19.dp,
+                onItemSelected = { index, _ ->
                     Toast.makeText(
                         context,
                         "Top Menu selected position:$index",
                         Toast.LENGTH_SHORT
                     ).show()
                 },
-                onItemClick = { index, item ->
+                onItemClick = { index, _ ->
                     Toast.makeText(
                         context,
                         "Top Menu click position:$index",
                         Toast.LENGTH_SHORT
                     ).show()
                 }
-            ) { index, item, isSelected ->
+            ) { _, item, isSelected ->
                 ImageWheelItem(
                     imageRes = item.drawableRes,
                     isSelected = isSelected
                 )
             }
         }
-        
-        // Right wheel (bottom-right corner, partially visible) - Same as test_circle_menu_right
+
         Box(
             modifier = Modifier
                 .size(306.dp)
@@ -173,31 +142,27 @@ fun ComposeMainContent() {
                 .offset(x = 153.dp, y = 153.dp)
         ) {
             CursorWheelLayout(
-                adapter = textAdapter,
+                items = textItems,
                 wheelSize = 306.dp,
                 itemSize = 50.dp,
-                selectedAngle = 225f, // Same as original
-                wheelBackgroundColor = rightWheelBackgroundColor, // Configurable background
-                cursorColor = Color.Red, // Same as original
-                cursorHeight = 20.dp, // Same as original
-                flingThreshold = 460f, // Same as original
-                itemRotationMode = ItemRotationMode.Inward, // Same as original
-                onItemSelected = { index, item ->
-                    // Same functionality as original
-                },
-                onItemClick = { index, item ->
+                selectedAngle = 225f,
+                wheelBackgroundColor = rightWheelBackgroundColor,
+                cursorColor = Color.Red,
+                cursorHeight = 20.dp,
+                flingThreshold = 460f,
+                itemRotationMode = ItemRotationMode.Inward,
+                onItemClick = { _, item ->
                     Toast.makeText(context, "Right wheel: ${item.text}", Toast.LENGTH_SHORT).show()
                 }
-            ) { index, item, isSelected ->
+            ) { _, item, isSelected ->
                 TextWheelItem(
                     text = item.text,
                     isSelected = isSelected,
-                    gravity = "center" // Same as original
+                    gravity = "center"
                 )
             }
         }
-        
-        // Random selection button (same position as original)
+
         Button(
             onClick = {
                 randomIndex = Random.nextInt(10)

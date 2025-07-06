@@ -5,28 +5,13 @@ import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.key
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -38,11 +23,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.cursorwheel.compose.CursorWheelLayout
-import com.cursorwheel.compose.CursorWheelAdapter
 import com.cursorwheel.compose.ItemRotationMode
-import com.cursorwheel.compose.ListCursorWheelAdapter
-import com.cursorwheel.compose.MutableCursorWheelAdapter
-import com.cursorwheel.compose.toCursorWheelAdapter
 
 class ComposeWheelActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -64,26 +45,17 @@ class ComposeWheelActivity : ComponentActivity() {
 fun ComposeWheelDemo() {
     val context = LocalContext.current
 
-    // Different test datasets
     val smallDataset = remember { (1..6).map { "Item $it" } }
     val mediumDataset = remember { (1..23).map { it.toString() } }
     val largeDataset = remember { (1..30).map { "#$it" } }
 
-    // Current mode state
-    var currentMode by remember { mutableStateOf("Medium (23 items)") }
     var currentItems by remember { mutableStateOf(mediumDataset) }
     var selectedItem by remember { mutableStateOf(currentItems.first()) }
     var lastClickedItem by remember { mutableStateOf("") }
-    var useAdapterPattern by remember { mutableStateOf(false) }
 
-    // Track when dataset changes to reset wheel position
-    var datasetChangeKey by remember { mutableStateOf(0) }
-
-    // Update selected item when dataset changes
     LaunchedEffect(currentItems) {
         selectedItem = currentItems.first()
         lastClickedItem = ""
-        datasetChangeKey += 1 // Trigger wheel reset
     }
 
     Column(
@@ -93,7 +65,6 @@ fun ComposeWheelDemo() {
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
-        // Title
         Text(
             text = "Compose Wheel Demo",
             color = Color.White,
@@ -103,69 +74,25 @@ fun ComposeWheelDemo() {
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        // API Pattern toggle
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceEvenly
         ) {
-            Button(
-                onClick = { useAdapterPattern = false }
-            ) {
-                Text("List API", fontSize = 12.sp)
-            }
-            
-            Button(
-                onClick = { useAdapterPattern = true }
-            ) {
-                Text("Adapter API", fontSize = 12.sp)
-            }
-        }
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        // Mode selector buttons
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceEvenly
-        ) {
-            Button(
-                onClick = {
-                    currentMode = "Small (6 items)"
-                    currentItems = smallDataset
-                }
-            ) {
+            Button(onClick = { currentItems = smallDataset }) {
                 Text("6 Items")
             }
 
-            Button(
-                onClick = {
-                    currentMode = "Medium (23 items)"
-                    currentItems = mediumDataset
-                }
-            ) {
+            Button(onClick = { currentItems = mediumDataset }) {
                 Text("23 Items")
             }
 
-            Button(
-                onClick = {
-                    currentMode = "Large (30 items)"
-                    currentItems = largeDataset
-                }
-            ) {
+            Button(onClick = { currentItems = largeDataset }) {
                 Text("30 Items")
             }
         }
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        // Current mode info
-        Text(
-            text = "API: ${if (useAdapterPattern) "Adapter" else "List"} | Mode: $currentMode",
-            color = Color(0x4CFFFFFF),
-            fontSize = 14.sp
-        )
-
-        // Selection info
         Text(
             text = "Selected: $selectedItem",
             color = Color(0xFFFFFFFF),
@@ -175,14 +102,13 @@ fun ComposeWheelDemo() {
         if (lastClickedItem.isNotEmpty()) {
             Text(
                 text = "Last clicked: $lastClickedItem",
-                color = Color(0x4CFFFFFF), // secondary_text_light
+                color = Color(0x4CFFFFFF),
                 fontSize = 14.sp
             )
         }
 
         Spacer(modifier = Modifier.height(32.dp))
 
-        // Cursor Wheel Layout with dynamic sizing based on item count
         val wheelSize = when {
             currentItems.size <= 6 -> 240.dp
             currentItems.size <= 23 -> 280.dp
@@ -195,89 +121,40 @@ fun ComposeWheelDemo() {
             else -> 45.dp
         }
 
-        // Use key to reset wheel when dataset changes
-        key(datasetChangeKey, useAdapterPattern) {
-            if (useAdapterPattern) {
-                // Demonstrate adapter-based API
-                val adapter = remember(currentItems) { 
-                    currentItems.toCursorWheelAdapter()
-                }
-                
-                CursorWheelLayout(
-                    adapter = adapter,
-                    modifier = Modifier,
-                    wheelSize = wheelSize,
-                    itemSize = itemSize,
-                    selectedAngle = -90f, // Top position (-90° = 12 o'clock position)
-                    paddingRatio = 0.002f,
-                    wheelBackgroundColor = Color(0xE513171C), // bg_wheel
-                    itemRotationMode = ItemRotationMode.None,
-                    onItemSelected = { index, item ->
-                        selectedItem = item
-                    },
-                    onItemClick = { index, item ->
-                        lastClickedItem = item
-                        Toast.makeText(
-                            context,
-                            "Adapter API - Clicked: $item (${currentItems.size} items)",
-                            Toast.LENGTH_SHORT
-                        ).show()
-                    }
-                ) { index, item, isSelected ->
-                    WheelItem(
-                        text = item,
-                        isSelected = isSelected,
-                        itemCount = currentItems.size
-                    )
-                }
-            } else {
-                // Original list-based API
-                CursorWheelLayout(
-                    items = currentItems,
-                    modifier = Modifier,
-                    wheelSize = wheelSize,
-                    itemSize = itemSize,
-                    selectedAngle = -90f, // Top position (-90° = 12 o'clock position)
-                    paddingRatio = 0.002f,
-                    wheelBackgroundColor = Color(0xE513171C), // bg_wheel
-                    itemRotationMode = ItemRotationMode.None,
-                    onItemSelected = { index, item ->
-                        selectedItem = item
-                    },
-                    onItemClick = { index, item ->
-                        lastClickedItem = item
-                        Toast.makeText(
-                            context,
-                            "List API - Clicked: $item (${currentItems.size} items)",
-                            Toast.LENGTH_SHORT
-                        ).show()
-                    }
-                ) { index, item, isSelected ->
-                    WheelItem(
-                        text = item,
-                        isSelected = isSelected,
-                        itemCount = currentItems.size
-                    )
-                }
+        CursorWheelLayout(
+            items = currentItems,
+            modifier = Modifier,
+            wheelSize = wheelSize,
+            itemSize = itemSize,
+            selectedAngle = -90f,
+            paddingRatio = 0.002f,
+            wheelBackgroundColor = Color(0xE513171C),
+            itemRotationMode = ItemRotationMode.None,
+            onItemSelected = { _, item ->
+                selectedItem = item
+            },
+            onItemClick = { _, item ->
+                lastClickedItem = item
+                Toast.makeText(
+                    context,
+                    "Clicked: $item",
+                    Toast.LENGTH_SHORT
+                ).show()
             }
+        ) { _, item, isSelected ->
+            WheelItem(
+                text = item,
+                isSelected = isSelected,
+                itemCount = currentItems.size
+            )
         }
 
         Spacer(modifier = Modifier.height(32.dp))
 
-        // Description
         Text(
             text = "Drag to rotate • Tap to select • Fling to spin",
             color = Color(0x4CFFFFFF),
             fontSize = 12.sp,
-            textAlign = TextAlign.Center
-        )
-
-        Spacer(modifier = Modifier.height(8.dp))
-
-        Text(
-            text = "Toggle API patterns • Test different item counts to see wheel adaptation",
-            color = Color(0x33FFFFFF),
-            fontSize = 10.sp,
             textAlign = TextAlign.Center
         )
     }
@@ -290,7 +167,6 @@ fun WheelItem(
     itemCount: Int,
     modifier: Modifier = Modifier
 ) {
-    // Adjust text size based on item count for better readability
     val fontSize = when {
         itemCount <= 6 -> 18.sp
         itemCount <= 23 -> 16.sp
@@ -309,9 +185,9 @@ fun WheelItem(
             .clip(CircleShape)
             .background(
                 if (isSelected) {
-                    Color(0xFFFFC52A) // colorAccent
+                    Color(0xFFFFC52A)
                 } else {
-                    Color.Transparent // No background for non-selected items
+                    Color.Transparent
                 }
             ),
         contentAlignment = Alignment.Center
@@ -319,7 +195,7 @@ fun WheelItem(
         Text(
             text = text,
             color = if (isSelected) {
-                Color(0xFF212121) // primary_text_dark
+                Color(0xFF212121)
             } else {
                 Color.White
             },
