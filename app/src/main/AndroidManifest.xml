@@ -30,6 +30,11 @@
             android:exported="true"
             android:label="Compose Wheel Demo"
             android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name="com.cursorwheellayout.AdvancedComposeWheelActivity"
+            android:exported="true"
+            android:label="Advanced Wheel APIs"
+            android:theme="@style/AppTheme.NoActionBar" />
     </application>
 
 </manifest>

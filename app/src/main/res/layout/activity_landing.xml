@@ -78,6 +78,21 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/btn_sample_wheel"
+        app:layout_constraintBottom_toTopOf="@id/btn_advanced_wheel" />
+
+    <Button
+        android:id="@+id/btn_advanced_wheel"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="Advanced Wheel APIs"
+        android:textSize="18sp"
+        android:backgroundTint="@color/colorAccent"
+        android:textColor="@color/primary_text_drak"
+        android:padding="16dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/btn_compose_wheel"
         app:layout_constraintBottom_toBottomOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

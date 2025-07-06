@@ -34,6 +34,74 @@ import kotlin.math.hypot
 import kotlin.math.roundToInt
 import kotlin.math.sin
 
+/**
+ * Interface for providing data to CursorWheelLayout in a more flexible way.
+ * This allows for more dynamic content creation similar to the original CycleWheelAdapter.
+ */
+interface CursorWheelAdapter<T> {
+    /**
+     * Return the number of items in the dataset
+     */
+    fun getCount(): Int
+    
+    /**
+     * Get the data item associated with the specified position in the data set.
+     */
+    fun getItem(position: Int): T
+    
+    /**
+     * Get the type of View that will be created for the specified item.
+     * This can be used for view recycling optimization in future versions.
+     */
+    fun getItemViewType(position: Int): Int = 0
+    
+    /**
+     * Returns the number of types of Views that will be created.
+     */
+    fun getViewTypeCount(): Int = 1
+}
+
+/**
+ * Simple implementation of CursorWheelAdapter that wraps a list
+ */
+class ListCursorWheelAdapter<T>(private val items: List<T>) : CursorWheelAdapter<T> {
+    override fun getCount(): Int = items.size
+    override fun getItem(position: Int): T = items[position]
+}
+
+/**
+ * Extension function to create a CursorWheelAdapter from a List
+ */
+fun <T> List<T>.toCursorWheelAdapter(): CursorWheelAdapter<T> = ListCursorWheelAdapter(this)
+
+/**
+ * Mutable implementation of CursorWheelAdapter that allows dynamic updates
+ */
+class MutableCursorWheelAdapter<T>(private val items: MutableList<T>) : CursorWheelAdapter<T> {
+    override fun getCount(): Int = items.size
+    override fun getItem(position: Int): T = items[position]
+    
+    fun addItem(item: T) {
+        items.add(item)
+    }
+    
+    fun addItem(index: Int, item: T) {
+        items.add(index, item)
+    }
+    
+    fun removeItem(index: Int): T {
+        return items.removeAt(index)
+    }
+    
+    fun updateItem(index: Int, item: T) {
+        items[index] = item
+    }
+    
+    fun clear() {
+        items.clear()
+    }
+}
+
 // Constants for CursorWheelLayout
 private object WheelConstants {
     const val DEFAULT_WHEEL_SIZE_DP = 300
@@ -61,6 +129,7 @@ private object WheelConstants {
  * Jetpack Compose implementation of CursorWheelLayout
  * 
  * A circular wheel layout where items are positioned in a circle and can be rotated via touch gestures.
+ * This is the main composable that supports custom item rendering.
  */
 @Composable
 fun <T> CursorWheelLayout(
@@ -317,6 +386,89 @@ fun <T> CursorWheelLayout(
             }
         }
     }
+}
+
+/**
+ * Overload of CursorWheelLayout that uses an adapter pattern for more flexible item management.
+ * This provides an API similar to the original CursorWheelLayout's CycleWheelAdapter.
+ */
+@Composable
+fun <T> CursorWheelLayout(
+    adapter: CursorWheelAdapter<T>,
+    modifier: Modifier = Modifier,
+    wheelSize: Dp = WheelConstants.DEFAULT_WHEEL_SIZE_DP.dp,
+    itemSize: Dp = WheelConstants.DEFAULT_ITEM_SIZE_DP.dp,
+    selectedAngle: Float = WheelConstants.DEFAULT_SELECTED_ANGLE,
+    paddingRatio: Float = WheelConstants.DEFAULT_PADDING_RATIO,
+    wheelBackgroundColor: Color = Color.Gray.copy(alpha = 0.3f),
+    itemRotationMode: ItemRotationMode = ItemRotationMode.None,
+    flingThreshold: Float = WheelConstants.DEFAULT_FLING_THRESHOLD,
+    onItemSelected: (index: Int, item: T) -> Unit = { _, _ -> },
+    onItemClick: (index: Int, item: T) -> Unit = { _, _ -> },
+    itemContent: @Composable (index: Int, item: T, isSelected: Boolean) -> Unit
+) {
+    // Convert adapter to list for the main implementation
+    val items = remember(adapter) {
+        (0 until adapter.getCount()).map { adapter.getItem(it) }
+    }
+    
+    CursorWheelLayout(
+        items = items,
+        modifier = modifier,
+        wheelSize = wheelSize,
+        itemSize = itemSize,
+        selectedAngle = selectedAngle,
+        paddingRatio = paddingRatio,
+        wheelBackgroundColor = wheelBackgroundColor,
+        itemRotationMode = itemRotationMode,
+        flingThreshold = flingThreshold,
+        onItemSelected = onItemSelected,
+        onItemClick = onItemClick,
+        itemContent = itemContent
+    )
+}
+
+/**
+ * Convenience overload that takes a count and item provider function.
+ * This is useful when you want to create items dynamically or when working with large datasets.
+ */
+@Composable
+fun <T> CursorWheelLayout(
+    itemCount: Int,
+    itemProvider: (index: Int) -> T,
+    modifier: Modifier = Modifier,
+    wheelSize: Dp = WheelConstants.DEFAULT_WHEEL_SIZE_DP.dp,
+    itemSize: Dp = WheelConstants.DEFAULT_ITEM_SIZE_DP.dp,
+    selectedAngle: Float = WheelConstants.DEFAULT_SELECTED_ANGLE,
+    paddingRatio: Float = WheelConstants.DEFAULT_PADDING_RATIO,
+    wheelBackgroundColor: Color = Color.Gray.copy(alpha = 0.3f),
+    itemRotationMode: ItemRotationMode = ItemRotationMode.None,
+    flingThreshold: Float = WheelConstants.DEFAULT_FLING_THRESHOLD,
+    onItemSelected: (index: Int, item: T) -> Unit = { _, _ -> },
+    onItemClick: (index: Int, item: T) -> Unit = { _, _ -> },
+    itemContent: @Composable (index: Int, item: T, isSelected: Boolean) -> Unit
+) {
+    val adapter = remember(itemCount, itemProvider) {
+        object : CursorWheelAdapter<T> {
+            override fun getCount(): Int = itemCount
+            override fun getItem(position: Int): T = itemProvider(position)
+        }
+    }
+    
+    CursorWheelLayout(
+        adapter = adapter,
+        modifier = modifier,
+        wheelSize = wheelSize,
+        itemSize = itemSize,
+        selectedAngle = selectedAngle,
+        paddingRatio = paddingRatio,
+        wheelBackgroundColor = wheelBackgroundColor,
+        itemRotationMode = itemRotationMode,
+        flingThreshold = flingThreshold,
+        onItemSelected = onItemSelected,
+        onItemClick = onItemClick,
+        itemContent = itemContent
+    )
 }
 
 /**
