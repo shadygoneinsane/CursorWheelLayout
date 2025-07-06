@@ -28,6 +28,7 @@ class LandingActivity : AppCompatActivity() {
         val btnSampleWheel = findViewById<Button>(R.id.btn_sample_wheel)
         val btnComposeWheel = findViewById<Button>(R.id.btn_compose_wheel)
         val btnAdvancedWheel = findViewById<Button>(R.id.btn_advanced_wheel)
+        val btnComposeMain = findViewById<Button>(R.id.btn_compose_main)
         
         btnOriginalDemo.setOnClickListener {
             startActivity(Intent(this, MainActivity::class.java))
@@ -43,6 +44,10 @@ class LandingActivity : AppCompatActivity() {
         
         btnAdvancedWheel.setOnClickListener {
             startActivity(Intent(this, AdvancedComposeWheelActivity::class.java))
+        }
+        
+        btnComposeMain.setOnClickListener {
+            startActivity(Intent(this, ComposeMainActivity::class.java))
         }
     }
 }

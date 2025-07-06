@@ -7,6 +7,8 @@ import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.gestures.awaitEachGesture
 import androidx.compose.foundation.gestures.awaitFirstDown
 import androidx.compose.foundation.layout.Box
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
@@ -139,9 +141,15 @@ fun <T> CursorWheelLayout(
     itemSize: Dp = WheelConstants.DEFAULT_ITEM_SIZE_DP.dp,
     selectedAngle: Float = WheelConstants.DEFAULT_SELECTED_ANGLE,
     paddingRatio: Float = WheelConstants.DEFAULT_PADDING_RATIO,
+    centerRatio: Float = 0.3f,
+    itemRatio: Float = 0.9f,
     wheelBackgroundColor: Color = Color.Gray.copy(alpha = 0.3f),
     itemRotationMode: ItemRotationMode = ItemRotationMode.None,
     flingThreshold: Float = WheelConstants.DEFAULT_FLING_THRESHOLD,
+    cursorColor: Color = Color.Transparent,
+    cursorHeight: Dp = 20.dp,
+    guideLineWidth: Dp = 0.dp,
+    guideLineColor: Color = Color.Transparent,
     onItemSelected: (index: Int, item: T) -> Unit = { _, _ -> },
     onItemClick: (index: Int, item: T) -> Unit = { _, _ -> },
     itemContent: @Composable (index: Int, item: T, isSelected: Boolean) -> Unit
@@ -206,13 +214,39 @@ fun <T> CursorWheelLayout(
         modifier = modifier.size(wheelSize),
         contentAlignment = Alignment.Center
     ) {
-        // Wheel background
+        // Wheel background and decorations
         Canvas(modifier = Modifier.fillMaxSize()) {
+            // Draw wheel background
             drawCircle(
                 color = wheelBackgroundColor,
                 radius = wheelSizePx / 2f,
                 center = center
             )
+            
+            // Draw cursor if specified
+            if (cursorColor != Color.Transparent) {
+                drawCursor(
+                    centerX = center.x,
+                    centerY = center.y,
+                    radius = wheelSizePx / 2f,
+                    selectedAngle = selectedAngle,
+                    cursorColor = cursorColor,
+                    cursorHeight = with(density) { cursorHeight.toPx() }
+                )
+            }
+            
+            // Draw guide lines if specified
+            if (guideLineWidth > 0.dp && guideLineColor != Color.Transparent) {
+                drawGuideLines(
+                    centerX = center.x,
+                    centerY = center.y,
+                    radius = wheelSizePx / 2f,
+                    itemCount = itemCount,
+                    startAngle = startAngle,
+                    guideLineColor = guideLineColor,
+                    guideLineWidth = with(density) { guideLineWidth.toPx() }
+                )
+            }
         }
         
         // Items layout with custom gesture handling
@@ -400,9 +434,15 @@ fun <T> CursorWheelLayout(
     itemSize: Dp = WheelConstants.DEFAULT_ITEM_SIZE_DP.dp,
     selectedAngle: Float = WheelConstants.DEFAULT_SELECTED_ANGLE,
     paddingRatio: Float = WheelConstants.DEFAULT_PADDING_RATIO,
+    centerRatio: Float = 0.3f,
+    itemRatio: Float = 0.9f,
     wheelBackgroundColor: Color = Color.Gray.copy(alpha = 0.3f),
     itemRotationMode: ItemRotationMode = ItemRotationMode.None,
     flingThreshold: Float = WheelConstants.DEFAULT_FLING_THRESHOLD,
+    cursorColor: Color = Color.Transparent,
+    cursorHeight: Dp = 20.dp,
+    guideLineWidth: Dp = 0.dp,
+    guideLineColor: Color = Color.Transparent,
     onItemSelected: (index: Int, item: T) -> Unit = { _, _ -> },
     onItemClick: (index: Int, item: T) -> Unit = { _, _ -> },
     itemContent: @Composable (index: Int, item: T, isSelected: Boolean) -> Unit
@@ -419,9 +459,15 @@ fun <T> CursorWheelLayout(
         itemSize = itemSize,
         selectedAngle = selectedAngle,
         paddingRatio = paddingRatio,
+        centerRatio = centerRatio,
+        itemRatio = itemRatio,
         wheelBackgroundColor = wheelBackgroundColor,
         itemRotationMode = itemRotationMode,
         flingThreshold = flingThreshold,
+        cursorColor = cursorColor,
+        cursorHeight = cursorHeight,
+        guideLineWidth = guideLineWidth,
+        guideLineColor = guideLineColor,
         onItemSelected = onItemSelected,
         onItemClick = onItemClick,
         itemContent = itemContent
@@ -441,9 +487,15 @@ fun <T> CursorWheelLayout(
     itemSize: Dp = WheelConstants.DEFAULT_ITEM_SIZE_DP.dp,
     selectedAngle: Float = WheelConstants.DEFAULT_SELECTED_ANGLE,
     paddingRatio: Float = WheelConstants.DEFAULT_PADDING_RATIO,
+    centerRatio: Float = 0.3f,
+    itemRatio: Float = 0.9f,
     wheelBackgroundColor: Color = Color.Gray.copy(alpha = 0.3f),
     itemRotationMode: ItemRotationMode = ItemRotationMode.None,
     flingThreshold: Float = WheelConstants.DEFAULT_FLING_THRESHOLD,
+    cursorColor: Color = Color.Transparent,
+    cursorHeight: Dp = 20.dp,
+    guideLineWidth: Dp = 0.dp,
+    guideLineColor: Color = Color.Transparent,
     onItemSelected: (index: Int, item: T) -> Unit = { _, _ -> },
     onItemClick: (index: Int, item: T) -> Unit = { _, _ -> },
     itemContent: @Composable (index: Int, item: T, isSelected: Boolean) -> Unit
@@ -462,9 +514,15 @@ fun <T> CursorWheelLayout(
         itemSize = itemSize,
         selectedAngle = selectedAngle,
         paddingRatio = paddingRatio,
+        centerRatio = centerRatio,
+        itemRatio = itemRatio,
         wheelBackgroundColor = wheelBackgroundColor,
         itemRotationMode = itemRotationMode,
         flingThreshold = flingThreshold,
+        cursorColor = cursorColor,
+        cursorHeight = cursorHeight,
+        guideLineWidth = guideLineWidth,
+        guideLineColor = guideLineColor,
         onItemSelected = onItemSelected,
         onItemClick = onItemClick,
         itemContent = itemContent
@@ -543,5 +601,65 @@ private suspend fun snapToNearestItem(
         targetValue = targetAngle,
         animationSpec = tween(durationMillis = 300)
     )
+}
+
+/**
+ * Draw cursor indicator at the selected angle position
+ */
+private fun DrawScope.drawCursor(
+    centerX: Float,
+    centerY: Float,
+    radius: Float,
+    selectedAngle: Float,
+    cursorColor: Color,
+    cursorHeight: Float
+) {
+    val angleRad = Math.toRadians(selectedAngle.toDouble())
+    val cursorStartRadius = radius - cursorHeight
+    val cursorEndRadius = radius
+    
+    val startX = centerX + (cursorStartRadius * cos(angleRad)).toFloat()
+    val startY = centerY + (cursorStartRadius * sin(angleRad)).toFloat()
+    val endX = centerX + (cursorEndRadius * cos(angleRad)).toFloat()
+    val endY = centerY + (cursorEndRadius * sin(angleRad)).toFloat()
+    
+    drawLine(
+        color = cursorColor,
+        start = Offset(startX, startY),
+        end = Offset(endX, endY),
+        strokeWidth = 4f
+    )
+}
+
+/**
+ * Draw guide lines from center to each item position
+ */
+private fun DrawScope.drawGuideLines(
+    centerX: Float,
+    centerY: Float,
+    radius: Float,
+    itemCount: Int,
+    startAngle: Float,
+    guideLineColor: Color,
+    guideLineWidth: Float
+) {
+    if (itemCount == 0) return
+    
+    val angleStep = 360f / itemCount
+    
+    for (i in 0 until itemCount) {
+        val itemAngle = startAngle + i * angleStep
+        val angleRad = Math.toRadians(itemAngle.toDouble())
+        
+        val endX = centerX + (radius * cos(angleRad)).toFloat()
+        val endY = centerY + (radius * sin(angleRad)).toFloat()
+        
+        drawLine(
+            color = guideLineColor,
+            start = Offset(centerX, centerY),
+            end = Offset(endX, endY),
+            strokeWidth = guideLineWidth
+        )
+    }
 }
 
