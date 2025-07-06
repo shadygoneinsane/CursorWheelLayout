@@ -3,6 +3,7 @@ plugins {
     id 'kotlin-android'
     id 'kotlin-kapt'
     id 'maven-publish'
+    id 'org.jetbrains.kotlin.plugin.compose' version '2.1.20'
 }
 
 android {
@@ -28,6 +29,13 @@ android {
     }
     buildFeatures {
         dataBinding true
+        compose true
+    }
+    composeOptions {
+        kotlinCompilerExtensionVersion = '1.5.20'
+    }
+    lint {
+        disable 'NullSafeMutableLiveData'
     }
     namespace 'com.cursorwheel'
 }
@@ -36,6 +44,14 @@ dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
 
     implementation libs.annotation
+    
+    // Compose BOM
+    implementation platform(libs.compose.bom)
+    implementation libs.compose.ui
+    implementation libs.compose.ui.tooling.preview
+    implementation libs.compose.material3
+    implementation libs.activity.compose
+    implementation libs.lifecycle.viewmodel.compose
 }
 
 publishing {

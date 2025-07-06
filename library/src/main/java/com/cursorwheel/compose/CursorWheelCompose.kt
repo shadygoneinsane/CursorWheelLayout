@@ -1,4 +1,4 @@
-package com.cursorwheellayout.compose
+package com.cursorwheel.compose
 
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.exponentialDecay

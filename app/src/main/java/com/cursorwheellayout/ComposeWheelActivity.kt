@@ -15,7 +15,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
@@ -38,8 +37,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.cursorwheellayout.compose.CursorWheelLayout
-import com.cursorwheellayout.compose.ItemRotationMode
+import com.cursorwheel.compose.CursorWheelLayout
+import com.cursorwheel.compose.ItemRotationMode
 
 class ComposeWheelActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -60,28 +59,28 @@ class ComposeWheelActivity : ComponentActivity() {
 @Composable
 fun ComposeWheelDemo() {
     val context = LocalContext.current
-    
+
     // Different test datasets
     val smallDataset = remember { (1..6).map { "Item $it" } }
     val mediumDataset = remember { (1..23).map { it.toString() } }
     val largeDataset = remember { (1..30).map { "#$it" } }
-    
+
     // Current mode state
     var currentMode by remember { mutableStateOf("Medium (23 items)") }
     var currentItems by remember { mutableStateOf(mediumDataset) }
     var selectedItem by remember { mutableStateOf(currentItems.first()) }
     var lastClickedItem by remember { mutableStateOf("") }
-    
+
     // Track when dataset changes to reset wheel position
     var datasetChangeKey by remember { mutableStateOf(0) }
-    
+
     // Update selected item when dataset changes
     LaunchedEffect(currentItems) {
         selectedItem = currentItems.first()
         lastClickedItem = ""
         datasetChangeKey += 1 // Trigger wheel reset
     }
-    
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -96,9 +95,9 @@ fun ComposeWheelDemo() {
             fontSize = 24.sp,
             fontWeight = FontWeight.Bold
         )
-        
+
         Spacer(modifier = Modifier.height(16.dp))
-        
+
         // Mode selector buttons
         Row(
             modifier = Modifier.fillMaxWidth(),
@@ -112,7 +111,7 @@ fun ComposeWheelDemo() {
             ) {
                 Text("6 Items")
             }
-            
+
             Button(
                 onClick = {
                     currentMode = "Medium (23 items)"
@@ -121,7 +120,7 @@ fun ComposeWheelDemo() {
             ) {
                 Text("23 Items")
             }
-            
+
             Button(
                 onClick = {
                     currentMode = "Large (30 items)"
@@ -131,23 +130,23 @@ fun ComposeWheelDemo() {
                 Text("30 Items")
             }
         }
-        
+
         Spacer(modifier = Modifier.height(16.dp))
-        
+
         // Current mode info
         Text(
             text = "Mode: $currentMode",
             color = Color(0x4CFFFFFF),
             fontSize = 14.sp
         )
-        
+
         // Selection info
         Text(
             text = "Selected: $selectedItem",
             color = Color(0xFFFFFFFF),
             fontSize = 18.sp
         )
-        
+
         if (lastClickedItem.isNotEmpty()) {
             Text(
                 text = "Last clicked: $lastClickedItem",
@@ -155,22 +154,22 @@ fun ComposeWheelDemo() {
                 fontSize = 14.sp
             )
         }
-        
+
         Spacer(modifier = Modifier.height(32.dp))
-        
+
         // Cursor Wheel Layout with dynamic sizing based on item count
         val wheelSize = when {
             currentItems.size <= 6 -> 240.dp
             currentItems.size <= 23 -> 280.dp
             else -> 320.dp
         }
-        
+
         val itemSize = when {
             currentItems.size <= 6 -> 60.dp
             currentItems.size <= 23 -> 50.dp
             else -> 45.dp
         }
-        
+
         // Use key to reset wheel when dataset changes
         key(datasetChangeKey) {
             CursorWheelLayout(
@@ -201,9 +200,9 @@ fun ComposeWheelDemo() {
                 )
             }
         }
-        
+
         Spacer(modifier = Modifier.height(32.dp))
-        
+
         // Description
         Text(
             text = "Drag to rotate • Tap to select • Fling to spin",
@@ -211,9 +210,9 @@ fun ComposeWheelDemo() {
             fontSize = 12.sp,
             textAlign = TextAlign.Center
         )
-        
+
         Spacer(modifier = Modifier.height(8.dp))
-        
+
         Text(
             text = "Test different item counts to see wheel adaptation",
             color = Color(0x33FFFFFF),
@@ -236,13 +235,13 @@ fun WheelItem(
         itemCount <= 23 -> 16.sp
         else -> 14.sp
     }
-    
+
     val itemSize = when {
         itemCount <= 6 -> 45.dp
         itemCount <= 23 -> 40.dp
         else -> 35.dp
     }
-    
+
     Box(
         modifier = modifier
             .size(itemSize)
