@@ -36,10 +36,10 @@ The project ships two artifacts — pick the one that matches your UI stack (or 
 ```groovy
 dependencies {
     // Jetpack Compose implementation
-    implementation 'com.github.shadygoneinsane:cursorwheel-compose:v2.2.0'
+    implementation 'com.github.shadygoneinsane.CursorWheelLayout:cursorwheel-compose:v2.2.0'
 
     // Classic View/XML implementation (CursorWheelView)
-    implementation 'com.github.shadygoneinsane:cursorwheel-view:v2.2.0'
+    implementation 'com.github.shadygoneinsane.CursorWheelLayout:cursorwheel-view:v2.2.0'
 }
 ```
 
