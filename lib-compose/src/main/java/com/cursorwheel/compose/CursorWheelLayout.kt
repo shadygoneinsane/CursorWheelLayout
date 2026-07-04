@@ -1,5 +1,8 @@
 package com.cursorwheel.compose
 
+import android.os.Build
+import android.view.HapticFeedbackConstants
+import android.view.View
 import androidx.compose.animation.core.exponentialDecay
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Canvas
@@ -17,6 +20,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.Layout
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.cursorwheel.compose.internal.WheelConstants
@@ -48,12 +52,14 @@ fun <T> CursorWheelLayout(
     cursorHeight: Dp = 20.dp,
     guideLineWidth: Dp = 0.dp,
     guideLineColor: Color = Color.Transparent,
+    hapticFeedbackEnabled: Boolean = true,
     onItemSelected: (index: Int, item: T) -> Unit = { _, _ -> },
     onItemClick: (index: Int, item: T) -> Unit = { _, _ -> },
     itemContent: @Composable (index: Int, item: T, isSelected: Boolean) -> Unit
 ) {
     val density = LocalDensity.current
     val scope = rememberCoroutineScope()
+    val hostView = LocalView.current
 
     val itemCount = items.size
     val angleStep = if (itemCount > 0) WheelConstants.FULL_CIRCLE_DEGREES / itemCount else 0f
@@ -84,6 +90,9 @@ fun <T> CursorWheelLayout(
 
             if (newSelectedIndex != state.selectedIndex) {
                 state.selectedIndex = newSelectedIndex
+                if (hapticFeedbackEnabled) {
+                    performWheelHapticFeedback(hostView)
+                }
                 onItemSelected(state.selectedIndex, items[state.selectedIndex])
             }
         }
@@ -127,7 +136,7 @@ fun <T> CursorWheelLayout(
         Layout(
             modifier = Modifier
                 .fillMaxSize()
-                .pointerInput(items.size) {
+                .pointerInput(items.size, hapticFeedbackEnabled) {
                     awaitEachGesture {
                         val downEvent = awaitFirstDown()
                         val downPosition = downEvent.position
@@ -185,6 +194,9 @@ fun <T> CursorWheelLayout(
                                 if (deltaAngle < -WheelConstants.HALF_CIRCLE_DEGREES) deltaAngle += WheelConstants.FULL_CIRCLE_DEGREES
 
                                 if (abs(deltaAngle) > WheelConstants.CLICK_THRESHOLD_DEGREES) {
+                                    if (isClick && hapticFeedbackEnabled) {
+                                        performWheelHapticFeedback(hostView)
+                                    }
                                     isClick = false
                                 }
 
@@ -280,4 +292,18 @@ fun <T> CursorWheelLayout(
             }
         }
     }
+}
+
+/**
+ * Mirrors the haptic behavior of the view-based CursorWheelView:
+ * CONTEXT_CLICK on API 23+, VIRTUAL_KEY below.
+ */
+private fun performWheelHapticFeedback(view: View) {
+    view.performHapticFeedback(
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            HapticFeedbackConstants.CONTEXT_CLICK
+        } else {
+            HapticFeedbackConstants.VIRTUAL_KEY
+        }
+    )
 }

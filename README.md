@@ -31,11 +31,20 @@ allprojects {
 
 **Step 2. Add the dependency**
 
+The project ships two artifacts — pick the one that matches your UI stack (or use both):
+
 ```groovy
 dependencies {
-    implementation 'com.github.shadygoneinsane:CursorWheelLayout:v3.0.0-compose'
+    // Jetpack Compose implementation
+    implementation 'com.github.shadygoneinsane:cursorwheel-compose:v2.2.0'
+
+    // Classic View/XML implementation (CursorWheelView)
+    implementation 'com.github.shadygoneinsane:cursorwheel-view:v2.2.0'
 }
 ```
+
+> Both artifacts require `minSdk 23`. Versions up to `v2.1.2` were published as the single
+> artifact `com.github.shadygoneinsane:CursorWheelLayout` (View/XML only).
 
 ## Usage
 
@@ -94,6 +103,7 @@ Here are the key parameters you can use to customize the `CursorWheelLayout`:
 | `itemSize` | `Dp` | The size of each item in the wheel. |
 | `selectedAngle` | `Float` | The angle at which the selected item is positioned. |
 | `itemRotationMode` | `ItemRotationMode` | The rotation mode for the items (`None`, `Inward`, `Outward`). |
+| `hapticFeedbackEnabled` | `Boolean` | Vibrates on drag start and on selection change (default `true`). |
 | `onItemSelected` | `(index: Int, item: T) -> Unit` | A callback that is invoked when an item is selected. |
 | `onItemClick` | `(index: Int, item: T) -> Unit` | A callback that is invoked when an item is clicked. |
 

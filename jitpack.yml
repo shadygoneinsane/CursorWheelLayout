@@ -1,10 +1,7 @@
 jdk:
-  - openjdk17
-before_install:
-  - sdk install java 17.0.1-open
-  - sdk use java 17.0.1-open
+  - openjdk21
 env:
   GRADLE_OPTS: "-Dorg.gradle.daemon=false -Dorg.gradle.parallel=false -Dorg.gradle.jvmargs='-Xmx4096m -XX:MaxMetaspaceSize=1024m -XX:+UseG1GC'"
 install:
-  - echo "Running a custom install command"
-  - ./gradlew clean :library:build :library:publishToMavenLocal -x test --stacktrace
+  - echo "Publishing lib-view and lib-compose"
+  - ./gradlew clean :lib-view:publishToMavenLocal :lib-compose:publishToMavenLocal -x test --stacktrace

@@ -1,19 +1,18 @@
 plugins {
     id 'com.android.application'
-    id 'kotlin-android'
-    id 'kotlin-kapt'
-    id 'org.jetbrains.kotlin.plugin.compose' version '2.1.20'
+    id 'com.android.legacy-kapt' version '9.2.1'
+    id 'org.jetbrains.kotlin.plugin.compose' version '2.2.0'
 }
 
 android {
 
     defaultConfig {
         applicationId "com.cursorwheel"
-        compileSdk 35
-        targetSdk 35
-        minSdkVersion 21
-        versionCode 7
-        versionName "2.1.2"
+        compileSdk 37
+        targetSdk 37
+        minSdkVersion 23
+        versionCode 8
+        versionName "2.2.0"
         multiDexEnabled true
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
@@ -34,19 +33,11 @@ android {
         targetCompatibility JavaVersion.VERSION_17
     }
 
-    kotlinOptions {
-        jvmTarget = JavaVersion.VERSION_17
-    }
-
     buildFeatures {
         dataBinding true
         compose true
     }
-    
-    composeOptions {
-        kotlinCompilerExtensionVersion = "1.5.20"
-    }
-    
+
     lint {
         disable 'NullSafeMutableLiveData'
     }
@@ -57,23 +48,22 @@ dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation project(':lib-compose')
     implementation project(':lib-view')
-    implementation libs.kotlin.stdlib
     implementation libs.core.ktx
     implementation libs.material
     implementation libs.constraintlayout
     implementation libs.lifecycle.livedata.ktx
     implementation libs.lifecycle.viewmodel.ktx
-    
+
     // Compose BOM
-    implementation platform('androidx.compose:compose-bom:2024.12.01')
-    implementation 'androidx.compose.ui:ui'
-    implementation 'androidx.compose.ui:ui-graphics'
-    implementation 'androidx.compose.ui:ui-tooling-preview'
-    implementation 'androidx.compose.material3:material3'
-    implementation 'androidx.activity:activity-compose:1.9.3'
-    implementation 'androidx.compose.animation:animation:1.7.6'
-    implementation 'androidx.lifecycle:lifecycle-viewmodel-compose:2.9.1'
-    
-    debugImplementation 'androidx.compose.ui:ui-tooling'
-    debugImplementation 'androidx.compose.ui:ui-test-manifest'
+    implementation platform(libs.compose.bom)
+    implementation libs.compose.ui
+    implementation libs.compose.ui.graphics
+    implementation libs.compose.ui.tooling.preview
+    implementation libs.compose.material3
+    implementation libs.compose.animation
+    implementation libs.activity.compose
+    implementation libs.lifecycle.viewmodel.compose
+
+    debugImplementation libs.compose.ui.tooling
+    debugImplementation libs.compose.ui.test.manifest
 }
